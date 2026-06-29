@@ -1,35 +1,197 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
-    <!-- 设置网页编码，防止中文变乱码 -->
     <meta charset="UTF-8">
-    <!-- 让网页在手机上也能按比例正常显示 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 网页浏览器标签页上显示的标题 -->
-    <title>我们的活动日历</title>
+    <title>团队服务月活动日历</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+    <style>
+        /* 页面整体美化样式 */
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: #f4f6f9;
+            /* 现代感淡灰背景 */
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        /* 网页大卡片容器 */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        /* 日历区域的基础样式微调 */
+        #calendar {
+            margin-bottom: 40px;
+        }
+
+        /* 让日历中的活动方块变成小手光标，提示可点击 */
+        .fc-event {
+            cursor: pointer !important;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        /* 底部图片超链接区域样式 */
+        .links-section {
+            text-align: center;
+            border-top: 2px dashed #e8e8e8;
+            padding-top: 30px;
+            margin-top: 20px;
+        }
+
+        .links-title {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .image-links-wrapper {
+            text-align: center;
+        }
+
+        .image-links-wrapper a {
+            display: inline-block;
+            margin: 15px;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+
+        /* 鼠标悬停在图片上时，图片会微微放大，极具交互感 */
+        .image-links-wrapper a:hover {
+            transform: scale(1.04);
+        }
+
+        .image-links-wrapper img {
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- 网页正文的大标题 -->
-    <h1 style="text-align: center;">团队服务月活动日历</h1>
+    <div class="container">
+        <h1>📅 团队服务月活动安排</h1>
 
-    <!-- 【关键】把你刚才写好的那行 iframe 代码，替换掉下面这一行 -->
-    <iframe src="https://sjtu.feishu.cn/base/OvofbZnzSaYwNKsLGd1cjLJ8nuc?from=from_copylink" width="100%" height="800"
-        frameborder="0"></iframe>
+        <div id="calendar"></div>
 
-    <hr> <!-- 这一行会在网页上画一条分割线 -->
+        <div class="links-section">
+            <p class="links-title">🔥 点击下方图片，获取更多精彩资源 🔥</p>
+            <div class="image-links-wrapper">
 
-    <!-- 你们之前提到想加的“图片超链接”，可以直接写在下面 -->
-    <!-- <div style="text-align: center;">
-        <p>点击下方图片查看更多信息：</p>
-        <a href="你想跳转的网址">
-            如果目前没有真实图片，可以先用一张网络测试图占位 
-            <img src="https://via.placeholder.com/300x150?text=点击跳转" alt="活动图片">
-        </a>
-    </div> -->
+                <a href="https://www.baidu.com" target="_blank">
+                    <img src="https://via.placeholder.com/280x140/3498db/ffffff?text=活动手册下载" alt="活动手册" width="280">
+                </a>
+
+                <a href="https://www.baidu.com" target="_blank">
+                    <img src="https://via.placeholder.com/280x140/2ecc71/ffffff?text=相关精彩视频" alt="精彩视频" width="280">
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                // 初始化视图：月视图
+                initialView: 'dayGridMonth',
+                // 完美汉化：将日历语言设为中文
+                locale: 'zh-cn',
+
+                // 顶端工具栏配置：左边放切换按钮，中间放年月标题，右边允许切换月/周/日程
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,listMonth'
+                },
+
+                // 将按钮文字翻译成中文
+                buttonText: {
+                    today: '今天',
+                    month: '月视图',
+                    week: '周视图',
+                    list: '日程表'
+                },
+
+                // 【贴心设置】强制网页首次打开时，直接锁定在 2026年6月
+                initialDate: '2026-06-01',
+
+                // 🌟【核心数据区域】你们两个人的活动全部写在下面的数组里！
+                events: [
+                    {
+                        title: 'h2活动',
+                        start: '2026-06-05',
+                        backgroundColor: '#e74c3c', // 红色
+                        borderColor: '#e74c3c',
+                        description: '地点：一号楼报告厅。时间：14:00-16:00。'
+                    },
+                    {
+                        title: 'p2活动',
+                        start: '2026-06-12',
+                        backgroundColor: '#e74c3c',
+                        borderColor: '#e74c3c',
+                        description: '网页前端开发线上交流会，请准时参加。'
+                    },
+                    {
+                        title: 'h3活动',
+                        start: '2026-06-19',
+                        backgroundColor: '#3498db', // 蓝色
+                        borderColor: '#3498db',
+                        description: '中期成果汇报与答辩。'
+                    },
+                    {
+                        title: '✨ 2026年春季总结会',
+                        start: '2026-06-21',
+                        backgroundColor: '#f1c40f', // 黄色
+                        borderColor: '#f1c40f',
+                        textColor: '#333' // 黑色字体，防止看不清
+                    },
+                    {
+                        title: 'p3活动',
+                        start: '2026-06-26',
+                        backgroundColor: '#e74c3c',
+                        borderColor: '#e74c3c',
+                        description: '项目结题及代码最终 Push 截止时间。'
+                    }
+                ],
+
+                // 💡 附加超酷交互功能：当用户点击日历上的活动时，弹窗显示详细描述
+                eventClick: function (info) {
+                    if (info.event.extendedProps.description) {
+                        alert("【" + info.event.title + " 详情】\n\n" + info.event.extendedProps.description);
+                    } else {
+                        alert("活动名称：" + info.event.title);
+                    }
+                }
+            });
+
+            // 正式渲染出属于你们的专属精美日历
+            calendar.render();
+        });
+    </script>
 
 </body>
 
