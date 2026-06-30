@@ -9,28 +9,36 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
     <style>
+        /* ==========================================
+           1. 掌控全局高度：让网页严格占满一屏
+           ========================================== */
         body {
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
             background-color: #f4f6f9;
             margin: 0;
             padding: 0;
-            /* 去掉 body 默认边距，让页眉贴边 */
             color: #333;
+            height: 100vh;
+            /* 严格等于浏览器窗口的 100% 高度 */
+            overflow: hidden;
+            /* 隐藏浏览器的全局滚动条 */
+            display: flex;
+            flex-direction: column;
         }
 
-        /* ==========================================
-           1. 新增：顶部页眉 (Header) 样式
-           ========================================== */
         .page-header {
             background-color: #ffffff;
             padding: 15px 40px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            /* 稍微缩小一点底部间距 */
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #0078d4;
-            /* 底部加一条蓝色装饰线 */
+            height: 55px;
+            /* 固定页眉高度 */
+            box-sizing: border-box;
         }
 
         .header-title {
@@ -46,96 +54,72 @@
             font-size: 0.9em;
         }
 
-        /* 核心布局调整 */
-        .main-container {
-            max-width: 1450px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            gap: 30px;
-            align-items: flex-start;
+        /* 右上角的 GC学生会出品 */
+        .header-logo-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #4f69a2;
+            /* 使用和主题色相近的深蓝色 */
+            margin: 0;
         }
 
-        /* ==========================================
-           2. 修改：缩小日历，放大右侧
-           ========================================== */
+        /* 核心布局：动态计算剩余高度 */
+        .main-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 0 20px 20px 20px;
+            display: flex;
+            gap: 30px;
+            width: 100%;
+            /* 重点魔法：屏幕总高度 减去 页眉高度和边距，剩下的全给主容器 */
+            height: calc(100vh - 95px);
+            min-height: 650px;
+            /* 如果屏幕实在太小，给个最小底线高度防崩 */
+            box-sizing: border-box;
+        }
+
         .calendar-section {
             flex: 5.5;
-            /* 从之前的占绝对大头，缩小到 5.5 份 */
             background: #ffffff;
             padding: 25px;
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            height: 100%;
+            /* 日历卡片占满剩余高度 */
+            box-sizing: border-box;
         }
 
         .resources-section {
             flex: 4.5;
-            /* 右侧放大到 4.5 份，给横排圆圈留出足够空间 */
             min-width: 450px;
             background: #ffffff;
-            padding: 25px;
+            padding: 30px 25px;
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             box-sizing: border-box;
-        }
+            height: 100%;
+            /* 右侧卡片占满剩余高度 */
 
-        /* 标题样式 */
-        .section-title {
-            text-align: center;
-            color: #2c3e50;
-            margin-top: 0;
-            margin-bottom: 25px;
-            font-size: 1.3em;
-            border-bottom: 2px solid #f4f6f9;
-            padding-bottom: 10px;
-        }
-
-        /* 图例样式保持不变 */
-        .legend-container {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            border: 1px solid #eee;
-        }
-
-        .legend-title {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            margin-top: 0;
-        }
-
-        .legend-item {
+            /* 让右侧内容像弹簧一样垂直分布 */
             display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 4px;
-            margin-right: 12px;
-        }
-
-        .legend-text {
-            font-size: 0.95em;
-            color: #444;
         }
 
         /* ==========================================
-           3. 修改：横排圆圈网格（改成一排 3 个）
+           2. 放大圆圈、增加间距
            ========================================== */
         .icon-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            /* 核心魔法：改成 3 列 */
-            column-gap: 15px;
-            row-gap: 90px;
-            /* 依然保留较大的上下间距给下拉菜单 */
+            column-gap: 30px;
+            /* 左右间距加大 */
+            row-gap: 110px;
+            /* 上下间距加大，给下拉菜单留足空间 */
             justify-items: center;
+            width: 100%;
+            margin-top: 20px;
         }
 
         .icon-item {
@@ -153,26 +137,71 @@
         }
 
         .circle-icon {
-            width: 75px;
-            height: 75px;
+            /* 从 75px 放大到了 90px */
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             background-color: #4f69a2;
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1em;
+            /* 字体也稍微放大一点 */
+            font-size: 1.25em;
             font-weight: bold;
-            box-shadow: 0 4px 10px rgba(79, 105, 162, 0.3);
-            margin-bottom: 8px;
+            box-shadow: 0 4px 12px rgba(79, 105, 162, 0.3);
+            margin-bottom: 12px;
         }
 
         .icon-desc {
-            font-size: 0.85em;
+            font-size: 0.9em;
             color: #666;
             text-align: center;
             line-height: 1.4;
-            max-width: 100px;
+            max-width: 110px;
+        }
+
+        /* 图例样式移到底部 */
+        .legend-container {
+            background-color: #f8f9fa;
+            padding: 20px 30px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            width: 90%;
+            /* 控制图例宽度 */
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .legend-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            margin-top: 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 最后一行去掉底边距 */
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            margin-right: 12px;
+        }
+
+        .legend-text {
+            font-size: 0.95em;
+            color: #444;
         }
 
         /* 下拉菜单 */
@@ -192,7 +221,7 @@
 
         .dropdown-menu a {
             display: block;
-            padding: 8px 12px;
+            padding: 10px 12px;
             color: #333;
             text-decoration: none;
             font-size: 0.9em;
@@ -209,13 +238,25 @@
         }
 
         @media (max-width: 1000px) {
+            body {
+                height: auto;
+                overflow: auto;
+            }
+
+            /* 手机端恢复滚动 */
             .main-container {
+                height: auto;
                 flex-direction: column;
+            }
+
+            .calendar-section {
+                height: 600px;
             }
 
             .resources-section {
                 width: 100%;
                 min-width: auto;
+                gap: 40px;
             }
         }
 
@@ -291,7 +332,7 @@
             <h1 class="header-title">GC学生会活动日程看板</h1>
             <p class="header-subtitle">汇聚各部门最新鲜的活动资讯与指南</p>
         </div>
-        <div class="header-subtitle">✨ 始于 2026</div>
+        <div class="header-logo-text">✨ GC学生会出品</div>
     </header>
 
     <div class="main-container">
@@ -301,23 +342,6 @@
         </div>
 
         <div class="resources-section">
-            <h2 class="section-title">✨ GC学生会出品</h2>
-
-            <div class="legend-container">
-                <h3 class="legend-title">🎨 活动分类图例</h3>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #e74c3c;"></div>
-                    <div class="legend-text">学生会活动 (红色)</div>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #3498db;"></div>
-                    <div class="legend-text">服务月活动 (蓝色)</div>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #2ecc71;"></div>
-                    <div class="legend-text">青志队活动 (绿色)</div>
-                </div>
-            </div>
 
             <div class="icon-grid">
                 <div class="icon-item" onclick="toggleMenu(this, event)">
@@ -349,10 +373,10 @@
 
                 <div class="icon-item" onclick="toggleMenu(this, event)">
                     <div class="circle-icon"
-                        style="background-color: #5cb85c; box-shadow: 0 4px 10px rgba(92,184,92,0.3);">技术</div>
+                        style="background-color: #5cb85c; box-shadow: 0 4px 12px rgba(92,184,92,0.3);">技术</div>
                     <div class="icon-desc">点击查看 ▼</div>
                     <div class="dropdown-menu">
-                        <a href="#" target="_blank">技术部 repo</a>
+                        <a href="https://github.com/Tech-JI" target="_blank">技术部 repo</a>
                         <a href="#" target="_blank">科协相关文档</a>
                     </div>
                 </div>
@@ -369,8 +393,24 @@
                     <div class="dropdown-menu"><a href="#">敬请期待</a></div>
                 </div>
             </div>
-        </div>
 
+            <div class="legend-container">
+                <h3 class="legend-title">🎨 活动分类图例</h3>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e74c3c;"></div>
+                    <div class="legend-text">学生会活动 (红色)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #3498db;"></div>
+                    <div class="legend-text">服务月活动 (蓝色)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #2ecc71;"></div>
+                    <div class="legend-text">青志队活动 (绿色)</div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <div id="custom-tooltip" class="event-tooltip">
@@ -397,10 +437,11 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'zh-cn',
+
                 // ==========================================
-                // 4. 新增：强行限制日历的整体高度
+                // 4. 高度自适应魔法：日历自动填满它所在的卡片高度！
                 // ==========================================
-                height: 650,
+                height: '100%',
 
                 headerToolbar: {
                     left: 'prev,next today',
@@ -411,7 +452,6 @@
                 eventDisplay: 'block',
                 displayEventTime: false,
 
-                // 下面的活动你可以换成你们真实的测试数据
                 events: [
                     { title: '学代会', start: '2026-07-08T18:00:00', end: '2026-07-08T21:00:00', backgroundColor: '#ffffff', borderColor: '#e74c3c', textColor: '#e74c3c', description: '地点: 待定。' },
                     { title: '女生节', start: '2026-06-06T13:00:00', end: '2026-06-06T17:00:00', backgroundColor: '#ffffff', borderColor: '#e74c3c', textColor: '#e74c3c', description: '地点: 龙宾楼一楼唐创。<br>详情可见: <a href="https://mp.weixin.qq.com/s/l80c-tro8d1LSC_ySNjFLg" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>' },
