@@ -1,198 +1,301 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>团队服务月活动日历</title>
-
+    <title>GC活动安排</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-
+    
     <style>
-        /* 页面整体美化样式 */
         body {
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
             background-color: #f4f6f9;
-            /* 现代感淡灰背景 */
             margin: 0;
             padding: 20px;
             color: #333;
         }
-
-        /* 网页大卡片容器 */
-        .container {
-            max-width: 1000px;
+        
+        .main-container {
+            max-width: 1400px; 
             margin: 0 auto;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: flex;     
+            gap: 30px;         
+            align-items: flex-start;
         }
-
-        h1 {
+        
+        .calendar-section {
+            flex: 3; 
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+        
+        .resources-section {
+            flex: 1;
+            min-width: 320px;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            box-sizing: border-box;
+        }
+        
+        .section-title {
             text-align: center;
             color: #2c3e50;
-            margin-bottom: 30px;
-            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #f4f6f9;
+            padding-bottom: 10px;
         }
 
-        /* 日历区域的基础样式微调 */
-        #calendar {
-            margin-bottom: 40px;
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            justify-items: center;
+        }
+        
+        /* 修改 1：整个图标块变成相对定位，方便菜单悬浮 */
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+            transition: transform 0.2s ease;
+            position: relative; /* 关键：为了定位下拉菜单 */
+            cursor: pointer;    /* 鼠标变成小手，提示可点击 */
+        }
+        
+        .icon-item:hover {
+            transform: scale(1.08); 
+        }
+        
+        .circle-icon {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background-color: #4f69a2;
+            color: white;
+            display: flex;
+            align-items: center; 
+            justify-content: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(79, 105, 162, 0.3);
+            margin-bottom: 8px;
+        }
+        
+        .icon-desc {
+            font-size: 0.85em;
+            color: #666;
+            text-align: center;
+            line-height: 1.4;
+            max-width: 110px;
         }
 
-        /* 让日历中的活动方块变成小手光标，提示可点击 */
+        /* ====== 新增：下拉菜单的样式 ====== */
+        .dropdown-menu {
+            display: none; /* 默认隐藏菜单 */
+            position: absolute;
+            top: 105%; /* 悬浮在图标正下方 */
+            left: 50%;
+            transform: translateX(-50%); /* 保证菜单水平居中 */
+            background-color: white;
+            min-width: 150px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            border-radius: 8px;
+            padding: 8px 0;
+            z-index: 100; /* 确保菜单不会被日历挡住 */
+        }
+
+        /* 菜单里的每一个选项 */
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 16px;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.9em;
+            text-align: center;
+            transition: background 0.2s;
+        }
+
+        /* 鼠标滑过菜单选项时的底色 */
+        .dropdown-menu a:hover {
+            background-color: #f4f6f9;
+        }
+
+        /* 当外层被加上 active 类名时，显示菜单 */
+        .icon-item.active .dropdown-menu {
+            display: block;
+        }
+        /* ================================== */
+        
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .resources-section {
+                width: 100%;
+            }
+        }
+        
         .fc-event {
             cursor: pointer !important;
             padding: 2px 4px;
             border-radius: 4px;
         }
-
-        /* 底部图片超链接区域样式 */
-        .links-section {
-            text-align: center;
-            border-top: 2px dashed #e8e8e8;
-            padding-top: 30px;
-            margin-top: 20px;
-        }
-
-        .links-title {
-            font-size: 1.1em;
-            color: #555;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-
-        .image-links-wrapper {
-            text-align: center;
-        }
-
-        .image-links-wrapper a {
-            display: inline-block;
-            margin: 15px;
-            text-decoration: none;
-            transition: transform 0.2s ease;
-        }
-
-        /* 鼠标悬停在图片上时，图片会微微放大，极具交互感 */
-        .image-links-wrapper a:hover {
-            transform: scale(1.04);
-        }
-
-        .image-links-wrapper img {
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            max-width: 100%;
-            height: auto;
-        }
     </style>
 </head>
-
 <body>
 
-    <div class="container">
-        <h1> GC学生会活动安排</h1>
+<div class="main-container">
 
+    <div class="calendar-section">
         <div id="calendar"></div>
+    </div>
 
-        <div class="links-section">
-            <p class="links-title"> 点击下方图片，获取更多精彩资源 </p>
-            <div class="image-links-wrapper">
-
-                <a href="https://www.baidu.com" target="_blank">
-                    <img src="https://via.placeholder.com/280x140/3498db/ffffff?text=活动手册下载" alt="活动手册" width="280">
-                </a>
-
-                <a href="https://www.baidu.com" target="_blank">
-                    <img src="https://via.placeholder.com/280x140/2ecc71/ffffff?text=相关精彩视频" alt="精彩视频" width="280">
-                </a>
-
+    <div class="resources-section">
+        <h2 class="section-title"> GC学生会出品</h2>
+        
+        <div class="icon-grid">
+            
+            <div class="icon-item" onclick="toggleMenu(this, event)">
+                <div class="circle-icon">指北</div>
+                <div class="icon-desc">点击查看 ▼</div>
+                
+                <div class="dropdown-menu">
+                    <a href="https://survive.gcers.org/" target="_blank">GC生存手册</a>
+                    <a href="#" target="_blank">各部门历年活动</a>
+                </div>
             </div>
+            
+            <div class="icon-item" onclick="toggleMenu(this, event)">
+                <div class="circle-icon">生活区</div>
+                <div class="icon-desc">点击查看 ▼</div>
+                
+                <div class="dropdown-menu">
+                    <a href="#" target="_blank">宿舍钥匙及电脑维修</a>
+                    <a href="#" target="_blank">打印店及好吃的饭店</a>
+                </div>
+            </div>
+            
+            <div class="icon-item" onclick="toggleMenu(this, event)">
+                <div class="circle-icon">生涯规划</div>
+                <div class="icon-desc">点击查看 ▼</div>
+                
+                <div class="dropdown-menu">
+                    <a href="#" target="_blank">选课指南</a>
+                    <a href="#" target="_blank">学长学姐经验分享记录</a>
+                </div>
+            </div>
+            
+            <div class="icon-item" onclick="toggleMenu(this, event)">
+                <div class="circle-icon" style="background-color: #5cb85c; box-shadow: 0 4px 10px rgba(92,184,92,0.3);">技术</div>
+                <div class="icon-desc">点击查看 ▼</div>
+                
+                <div class="dropdown-menu">
+                    <a href="#" target="_blank">技术部 repo</a>
+                    <a href="#" target="_blank">科协相关文档</a>
+                </div>
+            </div>
+
+            <div class="icon-item" onclick="toggleMenu(this, event)">
+                <div class="circle-icon" style="background-color: #999; box-shadow: none;">更多</div>
+                <div class="icon-desc">筹备中...</div>
+                <div class="dropdown-menu">
+                    <a href="#">敬请期待</a>
+                </div>
+            </div>
+
+            <div class="icon-item" onclick="toggleMenu(this, event)">
+                <div class="circle-icon" style="background-color: #999; box-shadow: none;">更多</div>
+                <div class="icon-desc">筹备中...</div>
+                <div class="dropdown-menu">
+                    <a href="#">敬请期待</a>
+                </div>
+            </div>
+            
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
+</div>
 
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                // 初始化视图：月视图
-                initialView: 'dayGridMonth',
-                // 完美汉化：将日历语言设为中文
-                locale: 'zh-cn',
-
-                // 顶端工具栏配置：左边放切换按钮，中间放年月标题，右边允许切换月/周/日程
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,listMonth'
-                },
-
-                // 将按钮文字翻译成中文
-                buttonText: {
-                    today: '今天',
-                    month: '月视图',
-                    week: '周视图',
-                    list: '日程表'
-                },
-
-                // 【贴心设置】强制网页首次打开时，直接锁定在 2026年6月
-                initialDate: '2026-06-01',
-
-                // 🌟【核心数据区域】你们两个人的活动全部写在下面的数组里！
-                events: [
-                    {
-                        title: 'h2',
-                        start: '2026-06-05',
-                        backgroundColor: '#e74c3c', // 红色
-                        borderColor: '#e74c3c',
-                        description: '地点：一号楼报告厅。时间：14:00-16:00。'
-                    },
-                    {
-                        title: 'p2活动',
-                        start: '2026-06-12',
-                        backgroundColor: '#e74c3c',
-                        borderColor: '#e74c3c',
-                        description: '网页前端开发线上交流会，请准时参加。'
-                    },
-                    {
-                        title: 'h3活动',
-                        start: '2026-06-19',
-                        backgroundColor: '#3498db', // 蓝色
-                        borderColor: '#3498db',
-                        description: '中期成果汇报与答辩。'
-                    },
-                    {
-                        title: '✨ 2026年春季总结会',
-                        start: '2026-06-21',
-                        backgroundColor: '#f1c40f', // 黄色
-                        borderColor: '#f1c40f',
-                        textColor: '#333' // 黑色字体，防止看不清
-                    },
-                    {
-                        title: 'p3活动',
-                        start: '2026-06-26',
-                        backgroundColor: '#e74c3c',
-                        borderColor: '#e74c3c',
-                        description: '项目结题及代码最终 Push 截止时间。'
-                    }
-                ],
-
-                // 💡 附加超酷交互功能：当用户点击日历上的活动时，弹窗显示详细描述
-                eventClick: function (info) {
-                    if (info.event.extendedProps.description) {
-                        alert("【" + info.event.title + " 详情】\n\n" + info.event.extendedProps.description);
-                    } else {
-                        alert("活动名称：" + info.event.title);
-                    }
-                }
-            });
-
-            // 正式渲染出属于你们的专属精美日历
-            calendar.render();
+<script>
+    // ===== 新增：控制下拉菜单点击显示的 JavaScript =====
+    function toggleMenu(element, event) {
+        // 阻止点击事件传递给 document，防止菜单刚打开就被关掉
+        event.stopPropagation(); 
+        
+        // 检查当前点的这个菜单是不是已经打开了
+        let isActive = element.classList.contains('active');
+        
+        // 先把所有菜单都关掉（移除 active）
+        document.querySelectorAll('.icon-item').forEach(function(item) {
+            item.classList.remove('active');
         });
-    </script>
+        
+        // 如果刚才它是关着的，就把它打开（加上 active）
+        if (!isActive) {
+            element.classList.add('active');
+        }
+    }
+
+    // 当用户点击网页空白处时，自动关掉所有菜单
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.icon-item').forEach(function(item) {
+            item.classList.remove('active');
+        });
+    });
+
+    // 意思是：等网页上的所有东西（骨架）都加载完毕后，再开始执行画日历的操作
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // 找到我们在 HTML 里留下的那个叫 calendar 的空 div
+        var calendarEl = document.getElementById('calendar');
+        
+        // 开始配置日历
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth', // 默认显示“月”视图
+            locale: 'zh-cn',             // 将日历的语言设置为中文
+            
+            // 顶端工具栏的按钮布局
+            headerToolbar: {
+                left: 'prev,next today', // 左边：上一月、下一月、返回今天
+                center: 'title',         // 中间：显示当前的年份和月份
+                right: 'dayGridMonth,timeGridWeek,listMonth' // 右边：视图切换按钮
+            },
+            
+            // 把默认的英文按钮文字翻译成中文
+            buttonText: {
+                today: '今天', month: '月视图', week: '周视图', list: '日程表'
+            },
+            
+            initialDate: '2026-06-01', // 强制日历打开时停留在 2026年6月（如果是当月使用，可删除这行）
+            
+            // 【核心数据】所有的活动都在这个数组里！以后只需复制粘贴大括号里面的内容即可添加新活动
+            events: [
+                { title: '学代会', start: '2026-07-08', backgroundColor: '#e74c3c', borderColor: '#e74c3c' },
+                { title: '女生节', start: '2026-06-6', backgroundColor: '#e74c3c', borderColor: '#e74c3c' },
+                { title: '毕业晚会', start: '2026-07-25', backgroundColor: '#3498db', borderColor: '#3498db' },
+                // 可以单独改变某个活动块的文字颜色（textColor）防止背景太亮看不清文字
+                { title: '服务月昭途分享会第二场', start: '2026-06-27', backgroundColor: '#f1c40f', borderColor: '#f1c40f', textColor: '#333' },
+                { title: '服务月六一', start: '2026-06-6', backgroundColor: '#e74c3c', borderColor: '#e74c3c' }
+            ],
+            
+            // 当用户在网页上点击某一个活动块时，弹出一个系统提示框
+            eventClick: function(info) {
+                alert("活动名称：" + info.event.title);
+            }
+        });
+        
+        // 把配置好的日历，真正渲染（画）到网页上
+        calendar.render();
+    });
+</script>
 
 </body>
-
 </html>
