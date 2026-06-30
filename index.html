@@ -418,15 +418,16 @@
                 },
 
                 initialDate: '2026-06-01', // 强制日历打开时停留在 2026年6月（如果是当月使用，可删除这行）
+                eventDisplay: 'block',
 
                 // 【核心数据】所有的活动都在这个数组里！以后只需复制粘贴大括号里面的内容即可添加新活动
                 events: [
-                    { title: '学代会', start: '2026-07-08T18:00:00', end: '2026-07-08T21:00:00', backgroundColor: '#e74c3c', borderColor: '#e74c3c',description:'地点: 待定。' },
-                    { title: '女生节', start: '2026-06-06T13:00:00', end: '2026-06-06T17:00:00', backgroundColor: '#e74c3c', borderColor: '#e74c3c',description:'地点: 龙宾楼一楼唐创。<br>详情可见: <a href="https://mp.weixin.qq.com/s/l80c-tro8d1LSC_ySNjFLg" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>' },
-                    { title: '毕业晚会', start: '2026-07-25', backgroundColor: '#e74c3c', borderColor: '#e74c3c',description:'地点: 待定。' },
+                    { title: '学代会', start: '2026-07-08T18:00:00', end: '2026-07-08T21:00:00', backgroundColor: '#ffffff', borderColor: '#e74c3c',textColor: '#e74c3c',description:'地点: 待定。' },
+                    { title: '女生节', start: '2026-06-06T13:00:00', end: '2026-06-06T17:00:00', backgroundColor: '#ffffff', borderColor: '#e74c3c',textColor: '#e74c3c',description:'地点: 龙宾楼一楼唐创。<br>详情可见: <a href="https://mp.weixin.qq.com/s/l80c-tro8d1LSC_ySNjFLg" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>' },
+                    { title: '毕业晚会', start: '2026-07-25', backgroundColor: '#ffffff', borderColor: '#e74c3c',textColor: '#e74c3c',description:'地点: 待定。' },
                     // 可以单独改变某个活动块的文字颜色（textColor）防止背景太亮看不清文字
-                    { title: '服务月昭途分享会第二场', start: '2026-06-27T10:20:00', end: '2026-06-27T11:20:00', backgroundColor: '#3498db', borderColor: '#3498db',description:'地点: 龙宾楼300中集报告厅。<br>详情可见: <a href="https://mp.weixin.qq.com/s/XIg87s2vVMarbvDbDEW4IQ" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>'},
-                    { title: '服务月六一', start: '2026-06-06T17:00:00', end: '2026-06-06T19:30:00', backgroundColor: '#3498db', borderColor: '#3498db',description:'地点: 龙宾楼444教工之家&电院大草坪。<br>详情可见: <a href="https://mp.weixin.qq.com/s/5VfUlKgB7ij5sg5Q95iycw" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>'}
+                    { title: '服务月昭途分享会第二场', start: '2026-06-27T10:20:00', end: '2026-06-27T11:20:00', backgroundColor: '#ffffff', borderColor: '#3498db',textColor: '#3498db',description:'地点: 龙宾楼300中集报告厅。<br>详情可见: <a href="https://mp.weixin.qq.com/s/XIg87s2vVMarbvDbDEW4IQ" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>'},
+                    { title: '服务月六一', start: '2026-06-06T17:00:00', end: '2026-06-06T19:30:00', backgroundColor: '#ffffff', borderColor: '#3498db',textColor: '#3498db',description:'地点: 龙宾楼444教工之家&电院大草坪。<br>详情可见: <a href="https://mp.weixin.qq.com/s/5VfUlKgB7ij5sg5Q95iycw" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>'}
                 ],
 
                 // 当用户在网页上点击某一个活动块时，弹出一个系统提示框
