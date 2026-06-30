@@ -286,132 +286,132 @@
 
 <body>
 
-    <div class="icon-grid">
+    <header class="page-header">
+        <div>
+            <h1 class="header-title">GC学生会活动日程看板</h1>
+            <p class="header-subtitle">汇聚各部门最新鲜的活动资讯与指南</p>
+        </div>
+        <div class="header-subtitle">✨ 始于 2026</div>
+    </header>
 
-        <div class="icon-item" onclick="toggleMenu(this, event)">
-            <div class="circle-icon">指北</div>
-            <div class="icon-desc">点击查看 ▼</div>
+    <div class="main-container">
 
-            <div class="dropdown-menu">
-                <a href="https://survive.gcers.org/" target="_blank">GC生存手册</a>
-                <a href="#" target="_blank">各部门历年活动</a>
-            </div>
+        <div class="calendar-section">
+            <div id="calendar"></div>
         </div>
 
-        <div class="icon-item" onclick="toggleMenu(this, event)">
-            <div class="circle-icon">生活区</div>
-            <div class="icon-desc">点击查看 ▼</div>
+        <div class="resources-section">
+            <h2 class="section-title">✨ GC学生会出品</h2>
 
-            <div class="dropdown-menu">
-                <a href="#" target="_blank">宿舍钥匙及电脑维修</a>
-                <a href="#" target="_blank">打印店及好吃的饭店</a>
+            <div class="legend-container">
+                <h3 class="legend-title">🎨 活动分类图例</h3>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e74c3c;"></div>
+                    <div class="legend-text">学生会活动 (红色)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #3498db;"></div>
+                    <div class="legend-text">服务月活动 (蓝色)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #2ecc71;"></div>
+                    <div class="legend-text">青志队活动 (绿色)</div>
+                </div>
             </div>
-        </div>
 
-        <div class="icon-item" onclick="toggleMenu(this, event)">
-            <div class="circle-icon">生涯规划</div>
-            <div class="icon-desc">点击查看 ▼</div>
+            <div class="icon-grid">
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon">指北</div>
+                    <div class="icon-desc">点击查看 ▼</div>
+                    <div class="dropdown-menu">
+                        <a href="#" target="_blank">GC生存手册</a>
+                        <a href="#" target="_blank">各部门历年活动</a>
+                    </div>
+                </div>
 
-            <div class="dropdown-menu">
-                <a href="#" target="_blank">选课指南</a>
-                <a href="#" target="_blank">学长学姐经验分享记录</a>
-            </div>
-        </div>
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon">生活区</div>
+                    <div class="icon-desc">点击查看 ▼</div>
+                    <div class="dropdown-menu">
+                        <a href="#" target="_blank">宿舍钥匙维修</a>
+                        <a href="#" target="_blank">周边美食打印</a>
+                    </div>
+                </div>
 
-        <div class="icon-item" onclick="toggleMenu(this, event)">
-            <div class="circle-icon" style="background-color: #5cb85c; box-shadow: 0 4px 10px rgba(92,184,92,0.3);">技术
-            </div>
-            <div class="icon-desc">点击查看 ▼</div>
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon">生涯规划</div>
+                    <div class="icon-desc">点击查看 ▼</div>
+                    <div class="dropdown-menu">
+                        <a href="#" target="_blank">选课指南</a>
+                        <a href="#" target="_blank">学长经验分享</a>
+                    </div>
+                </div>
 
-            <div class="dropdown-menu">
-                <a href="#" target="_blank">技术部 repo</a>
-                <a href="#" target="_blank">科协相关文档</a>
-            </div>
-        </div>
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon"
+                        style="background-color: #5cb85c; box-shadow: 0 4px 10px rgba(92,184,92,0.3);">技术</div>
+                    <div class="icon-desc">点击查看 ▼</div>
+                    <div class="dropdown-menu">
+                        <a href="#" target="_blank">技术部 repo</a>
+                        <a href="#" target="_blank">科协相关文档</a>
+                    </div>
+                </div>
 
-        <div class="icon-item" onclick="toggleMenu(this, event)">
-            <div class="circle-icon" style="background-color: #999; box-shadow: none;">更多</div>
-            <div class="icon-desc">筹备中...</div>
-            <div class="dropdown-menu">
-                <a href="#">敬请期待</a>
-            </div>
-        </div>
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon" style="background-color: #999; box-shadow: none;">更多</div>
+                    <div class="icon-desc">筹备中...</div>
+                    <div class="dropdown-menu"><a href="#">敬请期待</a></div>
+                </div>
 
-        <div class="icon-item" onclick="toggleMenu(this, event)">
-            <div class="circle-icon" style="background-color: #999; box-shadow: none;">更多</div>
-            <div class="icon-desc">筹备中...</div>
-            <div class="dropdown-menu">
-                <a href="#">敬请期待</a>
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon" style="background-color: #999; box-shadow: none;">更多</div>
+                    <div class="icon-desc">筹备中...</div>
+                    <div class="dropdown-menu"><a href="#">敬请期待</a></div>
+                </div>
             </div>
         </div>
 
     </div>
+
     <div id="custom-tooltip" class="event-tooltip">
         <span class="tooltip-close" onclick="closeTooltip()">×</span>
         <h3 id="tooltip-title">活动标题</h3>
         <div class="tooltip-time" id="tooltip-time">时间信息</div>
         <div class="tooltip-desc" id="tooltip-desc">描述内容</div>
     </div>
-    </div>
-
-    </div>
 
     <script>
-        // ===== 新增：控制下拉菜单点击显示的 JavaScript =====
         function toggleMenu(element, event) {
-            // 阻止点击事件传递给 document，防止菜单刚打开就被关掉
             event.stopPropagation();
-
-            // 检查当前点的这个菜单是不是已经打开了
             let isActive = element.classList.contains('active');
-
-            // 先把所有菜单都关掉（移除 active）
-            document.querySelectorAll('.icon-item').forEach(function (item) {
-                item.classList.remove('active');
-            });
-
-            // 如果刚才它是关着的，就把它打开（加上 active）
-            if (!isActive) {
-                element.classList.add('active');
-            }
+            document.querySelectorAll('.icon-item').forEach(item => item.classList.remove('active'));
+            if (!isActive) element.classList.add('active');
         }
 
-        // 当用户点击网页空白处时，自动关掉所有菜单
         document.addEventListener('click', function () {
-            document.querySelectorAll('.icon-item').forEach(function (item) {
-                item.classList.remove('active');
-            });
+            document.querySelectorAll('.icon-item').forEach(item => item.classList.remove('active'));
         });
 
-        // 意思是：等网页上的所有东西（骨架）都加载完毕后，再开始执行画日历的操作
         document.addEventListener('DOMContentLoaded', function () {
-
-            // 找到我们在 HTML 里留下的那个叫 calendar 的空 div
             var calendarEl = document.getElementById('calendar');
-
-            // 开始配置日历
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth', // 默认显示“月”视图
-                locale: 'zh-cn',             // 将日历的语言设置为中文
-
+                initialView: 'dayGridMonth',
+                locale: 'zh-cn',
+                // ==========================================
+                // 4. 新增：强行限制日历的整体高度
+                // ==========================================
                 height: 650,
-                // 顶端工具栏的按钮布局
+
                 headerToolbar: {
-                    left: 'prev,next today', // 左边：上一月、下一月、返回今天
-                    center: 'title',         // 中间：显示当前的年份和月份
-                    right: 'dayGridMonth,timeGridWeek,listMonth' // 右边：视图切换按钮
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,listMonth'
                 },
-
-                // 把默认的英文按钮文字翻译成中文
-                buttonText: {
-                    today: '今天', month: '月视图', week: '周视图', list: '日程表'
-                },
-
-                //initialDate: '2026-06-01', // 强制日历打开时停留在 2026年6月（如果是当月使用，可删除这行）
+                buttonText: { today: '今天', month: '月视图', week: '周视图', list: '日程表' },
                 eventDisplay: 'block',
                 displayEventTime: false,
 
-                // 【核心数据】所有的活动都在这个数组里！以后只需复制粘贴大括号里面的内容即可添加新活动
+                // 下面的活动你可以换成你们真实的测试数据
                 events: [
                     { title: '学代会', start: '2026-07-08T18:00:00', end: '2026-07-08T21:00:00', backgroundColor: '#ffffff', borderColor: '#e74c3c', textColor: '#e74c3c', description: '地点: 待定。' },
                     { title: '女生节', start: '2026-06-06T13:00:00', end: '2026-06-06T17:00:00', backgroundColor: '#ffffff', borderColor: '#e74c3c', textColor: '#e74c3c', description: '地点: 龙宾楼一楼唐创。<br>详情可见: <a href="https://mp.weixin.qq.com/s/l80c-tro8d1LSC_ySNjFLg" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>' },
@@ -420,65 +420,38 @@
                     { title: '服务月昭途分享会第二场', start: '2026-06-27T10:20:00', end: '2026-06-27T11:20:00', backgroundColor: '#ffffff', borderColor: '#3498db', textColor: '#3498db', description: '地点: 龙宾楼300中集报告厅。<br>详情可见: <a href="https://mp.weixin.qq.com/s/XIg87s2vVMarbvDbDEW4IQ" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>' },
                     { title: '服务月六一', start: '2026-06-06T17:00:00', end: '2026-06-06T19:30:00', backgroundColor: '#ffffff', borderColor: '#3498db', textColor: '#3498db', description: '地点: 龙宾楼444教工之家&电院大草坪。<br>详情可见: <a href="https://mp.weixin.qq.com/s/5VfUlKgB7ij5sg5Q95iycw" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>' }
                 ],
-
-                // 当用户在网页上点击某一个活动块时，弹出一个系统提示框
                 eventClick: function (info) {
-                    // 1. 获取弹窗元素
                     var tooltip = document.getElementById('custom-tooltip');
-
-                    // 2. 填充大标题
                     document.getElementById('tooltip-title').innerText = info.event.title;
-
-                    // 3. 提取并格式化时间 (比如转成：6月12日 23:59)
                     var start = info.event.start;
                     var month = start.getMonth() + 1;
                     var day = start.getDate();
                     var timeStr = "时间: " + month + "月" + day + "日";
-
-                    // 如果不是全天活动，就加上具体小时和分钟
                     if (!info.event.allDay) {
                         var hours = start.getHours().toString().padStart(2, '0');
                         var mins = start.getMinutes().toString().padStart(2, '0');
                         timeStr += " " + hours + ":" + mins;
                     }
                     document.getElementById('tooltip-time').innerText = timeStr;
-
-                    // 4. 读取详细描述 (如果在 event 里写了 description)
-                    var desc = info.event.extendedProps.description || "暂无更多详细信息";
-                    // 用 innerHTML 允许你在 description 里用 <br> 来换行！
-                    document.getElementById('tooltip-desc').innerHTML = desc;
-
-                    // 5. 显示弹窗
+                    document.getElementById('tooltip-desc').innerHTML = info.event.extendedProps.description || "暂无更多详细信息";
                     tooltip.style.display = 'block';
-
-                    // 6. 核心魔法：把弹窗移动到鼠标点击的位置的正上方
                     var x = info.jsEvent.pageX;
                     var y = info.jsEvent.pageY;
-                    tooltip.style.left = (x - tooltip.offsetWidth / 2) + 'px'; // 水平居中
-                    tooltip.style.top = (y - tooltip.offsetHeight - 15) + 'px'; // 向上偏移一点，给小尖角留位置
+                    tooltip.style.left = (x - tooltip.offsetWidth / 2) + 'px';
+                    tooltip.style.top = (y - tooltip.offsetHeight - 15) + 'px';
                 }
-            }); // calendar 初始化结束的大括号
-
+            });
             calendar.render();
         });
 
-        // ===== 在 script 标签的最底部，加上这两个控制弹窗关闭的函数 =====
-
-        // 点击右上角 × 关闭弹窗
-        function closeTooltip() {
-            document.getElementById('custom-tooltip').style.display = 'none';
-        }
-
-        // 点击网页的空白处，自动收起弹窗
+        function closeTooltip() { document.getElementById('custom-tooltip').style.display = 'none'; }
         document.addEventListener('click', function (e) {
             var tooltip = document.getElementById('custom-tooltip');
-            // 如果点击的不是弹窗本身，并且也不是日历上的活动方块
             if (!tooltip.contains(e.target) && !e.target.closest('.fc-event')) {
                 tooltip.style.display = 'none';
             }
         });
     </script>
-
 
 </body>
 
