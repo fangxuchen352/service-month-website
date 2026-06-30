@@ -9,9 +9,6 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
     <style>
-        /* ==========================================
-           1. 掌控全局高度：让网页严格占满一屏
-           ========================================== */
         body {
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
             background-color: #f4f6f9;
@@ -26,44 +23,57 @@
             flex-direction: column;
         }
 
+        /* ==========================================
+           1. 修改：大幅度做大、做宽页眉 (Header)
+           ========================================== */
         .page-header {
             background-color: #ffffff;
-            padding: 15px 40px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 22px 50px;
+            /* 增大上下和左右内边距，更有呼吸感 */
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+            /* 稍微加深一点阴影 */
             margin-bottom: 20px;
-            /* 稍微缩小一点底部间距 */
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #0078d4;
-            height: 55px;
-            /* 固定页眉高度 */
+            border-bottom: 3px solid #0078d4;
+            /* 底部蓝色装饰线加粗到 3px */
+            height: 90px;
+            /* 🔥 核心改动：高度从 55px 暴增到 90px，彻底告别拥挤！ */
             box-sizing: border-box;
         }
 
         .header-title {
             margin: 0;
-            font-size: 1.5em;
+            font-size: 1.8em;
+            /* 🔥 标题字体从 1.5em 放大到 1.8em */
             color: #2c3e50;
             font-weight: bold;
+            margin-bottom: 6px;
+            /* 主副标题之间留出空隙 */
         }
 
         .header-subtitle {
             margin: 0;
-            color: #666;
-            font-size: 0.9em;
+            color: #777;
+            font-size: 0.95em;
+            /* 副标题也稍微放大一点 */
         }
 
-        /* 右上角的 GC学生会出品 */
+        /* 右上角的 GC学生会出品 字体同步做大 */
         .header-logo-text {
-            font-size: 1.2em;
+            font-size: 1.4em;
+            /* 🔥 从 1.2em 放大到 1.4em，更显眼 */
             font-weight: bold;
             color: #4f69a2;
-            /* 使用和主题色相近的深蓝色 */
             margin: 0;
+            letter-spacing: 1px;
+            /* 字距微调，更高级 */
         }
 
-        /* 核心布局：动态计算剩余高度 */
+        /* ==========================================
+           2. 核心数学计算：重新同步剩余高度
+           ========================================== */
         .main-container {
             max-width: 1500px;
             margin: 0 auto;
@@ -71,10 +81,9 @@
             display: flex;
             gap: 30px;
             width: 100%;
-            /* 重点魔法：屏幕总高度 减去 页眉高度和边距，剩下的全给主容器 */
-            height: calc(100vh - 95px);
-            min-height: 650px;
-            /* 如果屏幕实在太小，给个最小底线高度防崩 */
+            /* 🔥 重点数学题：100vh 减去新页眉高度(90px)和边距(20px+20px)，现在精准减去 130px */
+            height: calc(100vh - 130px);
+            min-height: 580px;
             box-sizing: border-box;
         }
 
@@ -85,7 +94,6 @@
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             height: 100%;
-            /* 日历卡片占满剩余高度 */
             box-sizing: border-box;
         }
 
@@ -98,25 +106,18 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             box-sizing: border-box;
             height: 100%;
-            /* 右侧卡片占满剩余高度 */
-
-            /* 让右侧内容像弹簧一样垂直分布 */
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
         }
 
-        /* ==========================================
-           2. 放大圆圈、增加间距
-           ========================================== */
+        /* 圆圈与间距保持大尺寸 */
         .icon-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             column-gap: 30px;
-            /* 左右间距加大 */
             row-gap: 110px;
-            /* 上下间距加大，给下拉菜单留足空间 */
             justify-items: center;
             width: 100%;
             margin-top: 20px;
@@ -137,7 +138,6 @@
         }
 
         .circle-icon {
-            /* 从 75px 放大到了 90px */
             width: 90px;
             height: 90px;
             border-radius: 50%;
@@ -146,7 +146,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* 字体也稍微放大一点 */
             font-size: 1.25em;
             font-weight: bold;
             box-shadow: 0 4px 12px rgba(79, 105, 162, 0.3);
@@ -161,14 +160,12 @@
             max-width: 110px;
         }
 
-        /* 图例样式移到底部 */
         .legend-container {
             background-color: #f8f9fa;
             padding: 20px 30px;
             border-radius: 12px;
             border: 1px solid #eee;
             width: 90%;
-            /* 控制图例宽度 */
             box-sizing: border-box;
             margin-bottom: 10px;
         }
@@ -191,7 +188,6 @@
             margin-bottom: 0;
         }
 
-        /* 最后一行去掉底边距 */
         .legend-color {
             width: 16px;
             height: 16px;
@@ -204,7 +200,6 @@
             color: #444;
         }
 
-        /* 下拉菜单 */
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -243,7 +238,6 @@
                 overflow: auto;
             }
 
-            /* 手机端恢复滚动 */
             .main-container {
                 height: auto;
                 flex-direction: column;
@@ -260,7 +254,7 @@
             }
         }
 
-        /* 高级弹窗样式 */
+        /* 高级弹窗 */
         .event-tooltip {
             display: none;
             position: absolute;
