@@ -45,30 +45,34 @@
 
         .header-title {
             margin: 0;
-            font-size: 1.8em;
-            /* 🔥 标题字体从 1.5em 放大到 1.8em */
+            font-size: 2.5em;
+            /* 🔥 调大：从 1.8em 增加到了 2.5em，极其醒目 */
             color: #2c3e50;
             font-weight: bold;
-            margin-bottom: 6px;
-            /* 主副标题之间留出空隙 */
+            margin-bottom: 2px;
+            /* 拉近主副标题的距离，显得更紧凑 */
         }
 
         .header-subtitle {
             margin: 0;
             color: #777;
-            font-size: 0.95em;
-            /* 副标题也稍微放大一点 */
+            font-size: 0.85em;
+            /* 🔥 调小：从 0.95em 缩小到了 0.85em，做安静的配角 */
         }
 
-        /* 右上角的 GC学生会出品 字体同步做大 */
+        /* 右上角的 GC学生会出品 */
         .header-logo-text {
-            font-size: 1.4em;
-            /* 🔥 从 1.2em 放大到 1.4em，更显眼 */
+            font-size: 1.1em;
+            /* 🔥 调小：从 1.4em 缩小到了 1.1em */
             font-weight: bold;
             color: #4f69a2;
             margin: 0;
             letter-spacing: 1px;
-            /* 字距微调，更高级 */
+
+            /* 🔥 核心魔法：让这个元素打破整体的居中规则，单独向下靠拢！ */
+            align-self: flex-end;
+            /* 距离底部的灰色分割线留出一点点呼吸空间（如果不想要这个缝隙，可以改成 0） */
+            margin-bottom: 5px;
         }
 
         /* ==========================================
@@ -389,7 +393,7 @@
             </div>
 
             <div class="legend-container">
-                <h3 class="legend-title">活动图例</h3>
+                <h3 class="legend-title">🎨 活动图例</h3>
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: #e74c3c;"></div>
                     <div class="legend-text">学生会活动</div>
