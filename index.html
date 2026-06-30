@@ -143,6 +143,71 @@
             color: #444;
         }
 
+        .event-tooltip {
+            display: none;
+            /* 默认是隐藏的，点击才显示 */
+            position: absolute;
+            z-index: 9999;
+            /* 保证它浮在最顶层，不被日历挡住 */
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            width: 260px;
+            border: 1px solid #ebeef5;
+        }
+
+        /* 弹窗底部的小尖角 */
+        .event-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            margin-left: -10px;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: #ffffff transparent transparent transparent;
+        }
+
+        /* 右上角的关闭按钮 */
+        .tooltip-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 22px;
+            color: #909399;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .tooltip-close:hover {
+            color: #333;
+        }
+
+        /* 模仿图一的蓝色大标题 */
+        #tooltip-title {
+            color: #0078d4;
+            font-size: 24px;
+            margin: 0 0 15px 0;
+            font-weight: normal;
+            border-bottom: 1px solid #ebeef5;
+            padding-bottom: 10px;
+        }
+
+        /* 灰色的小字时间 */
+        .tooltip-time {
+            font-size: 14px;
+            color: #606266;
+            margin-bottom: 10px;
+        }
+
+        /* 详细描述正文 */
+        .tooltip-desc {
+            font-size: 14px;
+            color: #303133;
+            line-height: 1.5;
+        }
+
         /* ====== 新增：下拉菜单的样式 ====== */
         .dropdown-menu {
             display: none;
@@ -204,7 +269,12 @@
 <body>
 
     <div class="main-container">
-
+        <div id="custom-tooltip" class="event-tooltip">
+            <span class="tooltip-close" onclick="closeTooltip()">×</span>
+            <h3 id="tooltip-title">活动标题</h3>
+            <div class="tooltip-time" id="tooltip-time">时间信息</div>
+            <div class="tooltip-desc" id="tooltip-desc">这里是活动的详细描述...</div>
+        </div>
         <div class="calendar-section">
             <h1 style="text-align: center; color: #2c3e50; margin-top: 0; margin-bottom: 25px; font-size: 1.8em;">
                 GC活动安排</h1>
@@ -351,24 +421,72 @@
 
                 // 【核心数据】所有的活动都在这个数组里！以后只需复制粘贴大括号里面的内容即可添加新活动
                 events: [
-                    { title: '学代会', start: '2026-07-08T18:00:00', end: '2026-07-08T21:00:00', backgroundColor: '#e74c3c', borderColor: '#e74c3c' },
-                    { title: '女生节', start: '2026-06-06T13:00:00', end: '2026-06-06T17:00:00', backgroundColor: '#e74c3c', borderColor: '#e74c3c' },
-                    { title: '毕业晚会', start: '2026-07-25', backgroundColor: '#e74c3c', borderColor: '#e74c3c' },
+                    { title: '学代会', start: '2026-07-08T18:00:00', end: '2026-07-08T21:00:00', backgroundColor: '#e74c3c', borderColor: '#e74c3c',description:'地点: 待定。' },
+                    { title: '女生节', start: '2026-06-06T13:00:00', end: '2026-06-06T17:00:00', backgroundColor: '#e74c3c', borderColor: '#e74c3c',description:'地点: 龙宾楼一楼唐创。<br>详情可见: <a href="https://mp.weixin.qq.com/s/l80c-tro8d1LSC_ySNjFLg" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>' },
+                    { title: '毕业晚会', start: '2026-07-25', backgroundColor: '#e74c3c', borderColor: '#e74c3c',description:'地点: 待定。' },
                     // 可以单独改变某个活动块的文字颜色（textColor）防止背景太亮看不清文字
-                    { title: '服务月昭途分享会第二场', start: '2026-06-27T10:20:00', end: '2026-06-27T11:20:00', backgroundColor: '#3498db', borderColor: '#3498db', textColor: '#333' },
-                    { title: '服务月六一', start: '2026-06-06T17:00:00', end: '2026-06-06T19:30:00', backgroundColor: '#3498db', borderColor: '#3498db' }
+                    { title: '服务月昭途分享会第二场', start: '2026-06-27T10:20:00', end: '2026-06-27T11:20:00', backgroundColor: '#3498db', borderColor: '#3498db',description:'地点: 龙宾楼300中集报告厅。<br>详情可见: <a href="https://mp.weixin.qq.com/s/XIg87s2vVMarbvDbDEW4IQ" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>'},
+                    { title: '服务月六一', start: '2026-06-06T17:00:00', end: '2026-06-06T19:30:00', backgroundColor: '#3498db', borderColor: '#3498db',description:'地点: 龙宾楼444教工之家&电院大草坪。<br>详情可见: <a href="https://mp.weixin.qq.com/s/5VfUlKgB7ij5sg5Q95iycw" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>'}
                 ],
 
                 // 当用户在网页上点击某一个活动块时，弹出一个系统提示框
                 eventClick: function (info) {
-                    alert("活动名称：" + info.event.title);
-                }
-            });
+                    // 1. 获取弹窗元素
+                    var tooltip = document.getElementById('custom-tooltip');
 
-            // 把配置好的日历，真正渲染（画）到网页上
+                    // 2. 填充大标题
+                    document.getElementById('tooltip-title').innerText = info.event.title;
+
+                    // 3. 提取并格式化时间 (比如转成：6月12日 23:59)
+                    var start = info.event.start;
+                    var month = start.getMonth() + 1;
+                    var day = start.getDate();
+                    var timeStr = "时间: " + month + "月" + day + "日";
+
+                    // 如果不是全天活动，就加上具体小时和分钟
+                    if (!info.event.allDay) {
+                        var hours = start.getHours().toString().padStart(2, '0');
+                        var mins = start.getMinutes().toString().padStart(2, '0');
+                        timeStr += " " + hours + ":" + mins;
+                    }
+                    document.getElementById('tooltip-time').innerText = timeStr;
+
+                    // 4. 读取详细描述 (如果在 event 里写了 description)
+                    var desc = info.event.extendedProps.description || "暂无更多详细信息";
+                    // 用 innerHTML 允许你在 description 里用 <br> 来换行！
+                    document.getElementById('tooltip-desc').innerHTML = desc;
+
+                    // 5. 显示弹窗
+                    tooltip.style.display = 'block';
+
+                    // 6. 核心魔法：把弹窗移动到鼠标点击的位置的正上方
+                    var x = info.jsEvent.pageX;
+                    var y = info.jsEvent.pageY;
+                    tooltip.style.left = (x - tooltip.offsetWidth / 2) + 'px'; // 水平居中
+                    tooltip.style.top = (y - tooltip.offsetHeight - 15) + 'px'; // 向上偏移一点，给小尖角留位置
+                }
+            }); // calendar 初始化结束的大括号
+
             calendar.render();
         });
+
+        // ===== 在 script 标签的最底部，加上这两个控制弹窗关闭的函数 =====
+
+        // 点击右上角 × 关闭弹窗
+        function closeTooltip() {
+            document.getElementById('custom-tooltip').style.display = 'none';
+        }
+
+        // 点击网页的空白处，自动收起弹窗
+        document.addEventListener('click', function (e) {
+            var tooltip = document.getElementById('custom-tooltip');
+            // 如果点击的不是弹窗本身，并且也不是日历上的活动方块
+            if (!tooltip.contains(e.target) && !e.target.closest('.fc-event')) {
+                tooltip.style.display = 'none';
+            }
+        });
     </script>
+
 
 </body>
 
