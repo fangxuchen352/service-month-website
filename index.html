@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GC活动安排</title>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-    
+
     <style>
         body {
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
@@ -15,23 +16,23 @@
             padding: 20px;
             color: #333;
         }
-        
+
         .main-container {
-            max-width: 1400px; 
+            max-width: 1400px;
             margin: 0 auto;
-            display: flex;     
-            gap: 30px;         
+            display: flex;
+            gap: 30px;
             align-items: flex-start;
         }
-        
+
         .calendar-section {
-            flex: 3; 
+            flex: 3;
             background: #ffffff;
             padding: 25px;
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         }
-        
+
         .resources-section {
             flex: 1;
             min-width: 320px;
@@ -41,7 +42,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             box-sizing: border-box;
         }
-        
+
         .section-title {
             text-align: center;
             color: #2c3e50;
@@ -55,10 +56,12 @@
         .icon-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            /* 把 gap: 20px; 拆开设置：左右间距保持 20px，上下间距暴增到 110px！ */
+            column-gap: 20px;
+            row-gap: 110px;
             justify-items: center;
         }
-        
+
         /* 修改 1：整个图标块变成相对定位，方便菜单悬浮 */
         .icon-item {
             display: flex;
@@ -66,14 +69,16 @@
             align-items: center;
             color: #333;
             transition: transform 0.2s ease;
-            position: relative; /* 关键：为了定位下拉菜单 */
-            cursor: pointer;    /* 鼠标变成小手，提示可点击 */
+            position: relative;
+            /* 关键：为了定位下拉菜单 */
+            cursor: pointer;
+            /* 鼠标变成小手，提示可点击 */
         }
-        
+
         .icon-item:hover {
-            transform: scale(1.08); 
+            transform: scale(1.08);
         }
-        
+
         .circle-icon {
             width: 75px;
             height: 75px;
@@ -81,14 +86,14 @@
             background-color: #4f69a2;
             color: white;
             display: flex;
-            align-items: center; 
+            align-items: center;
             justify-content: center;
             font-size: 1.1em;
             font-weight: bold;
             box-shadow: 0 4px 10px rgba(79, 105, 162, 0.3);
             margin-bottom: 8px;
         }
-        
+
         .icon-desc {
             font-size: 0.85em;
             color: #666;
@@ -97,25 +102,68 @@
             max-width: 110px;
         }
 
+        /* ====== 新增：活动分类图例的样式 ====== */
+        .legend-container {
+            background-color: #f8f9fa;
+            /* 淡淡的灰色背景，和纯白卡片区分开 */
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            /* 和下方的圆形图标隔开一段距离 */
+            border: 1px solid #eee;
+        }
+
+        .legend-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            margin-top: 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            /* 让色块和文字水平对齐 */
+            margin-bottom: 12px;
+        }
+
+        /* 图例前面的小色块 */
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            /* 稍微带点圆角，类似你截图里的效果 */
+            margin-right: 12px;
+            /* 和右边的文字隔开 */
+        }
+
+        .legend-text {
+            font-size: 0.95em;
+            color: #444;
+        }
+
         /* ====== 新增：下拉菜单的样式 ====== */
         .dropdown-menu {
-            display: none; /* 默认隐藏菜单 */
+            display: none;
             position: absolute;
-            top: 105%; /* 悬浮在图标正下方 */
+            top: 105%;
             left: 50%;
-            transform: translateX(-50%); /* 保证菜单水平居中 */
+            transform: translateX(-50%);
             background-color: white;
             min-width: 150px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
             border-radius: 8px;
-            padding: 8px 0;
-            z-index: 100; /* 确保菜单不会被日历挡住 */
+            padding: 4px 0;
+            /* 缩小上下内边距 */
+            z-index: 100;
         }
 
         /* 菜单里的每一个选项 */
         .dropdown-menu a {
             display: block;
-            padding: 10px 16px;
+            padding: 8px 12px;
+            /* 把原先的 10px 16px 稍微收紧一点 */
             color: #333;
             text-decoration: none;
             font-size: 0.9em;
@@ -132,17 +180,19 @@
         .icon-item.active .dropdown-menu {
             display: block;
         }
+
         /* ================================== */
-        
+
         @media (max-width: 900px) {
             .main-container {
                 flex-direction: column;
             }
+
             .resources-section {
                 width: 100%;
             }
         }
-        
+
         .fc-event {
             cursor: pointer !important;
             padding: 2px 4px;
@@ -150,152 +200,173 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="main-container">
+    <div class="main-container">
 
-    <div class="calendar-section">
-        <div id="calendar"></div>
-    </div>
-
-    <div class="resources-section">
-        <h2 class="section-title"> GC学生会出品</h2>
-        
-        <div class="icon-grid">
-            
-            <div class="icon-item" onclick="toggleMenu(this, event)">
-                <div class="circle-icon">指北</div>
-                <div class="icon-desc">点击查看 ▼</div>
-                
-                <div class="dropdown-menu">
-                    <a href="https://survive.gcers.org/" target="_blank">GC生存手册</a>
-                    <a href="#" target="_blank">各部门历年活动</a>
-                </div>
-            </div>
-            
-            <div class="icon-item" onclick="toggleMenu(this, event)">
-                <div class="circle-icon">生活区</div>
-                <div class="icon-desc">点击查看 ▼</div>
-                
-                <div class="dropdown-menu">
-                    <a href="#" target="_blank">宿舍钥匙及电脑维修</a>
-                    <a href="#" target="_blank">打印店及好吃的饭店</a>
-                </div>
-            </div>
-            
-            <div class="icon-item" onclick="toggleMenu(this, event)">
-                <div class="circle-icon">生涯规划</div>
-                <div class="icon-desc">点击查看 ▼</div>
-                
-                <div class="dropdown-menu">
-                    <a href="#" target="_blank">选课指南</a>
-                    <a href="#" target="_blank">学长学姐经验分享记录</a>
-                </div>
-            </div>
-            
-            <div class="icon-item" onclick="toggleMenu(this, event)">
-                <div class="circle-icon" style="background-color: #5cb85c; box-shadow: 0 4px 10px rgba(92,184,92,0.3);">技术</div>
-                <div class="icon-desc">点击查看 ▼</div>
-                
-                <div class="dropdown-menu">
-                    <a href="#" target="_blank">技术部 repo</a>
-                    <a href="#" target="_blank">科协相关文档</a>
-                </div>
-            </div>
-
-            <div class="icon-item" onclick="toggleMenu(this, event)">
-                <div class="circle-icon" style="background-color: #999; box-shadow: none;">更多</div>
-                <div class="icon-desc">筹备中...</div>
-                <div class="dropdown-menu">
-                    <a href="#">敬请期待</a>
-                </div>
-            </div>
-
-            <div class="icon-item" onclick="toggleMenu(this, event)">
-                <div class="circle-icon" style="background-color: #999; box-shadow: none;">更多</div>
-                <div class="icon-desc">筹备中...</div>
-                <div class="dropdown-menu">
-                    <a href="#">敬请期待</a>
-                </div>
-            </div>
-            
+        <div class="calendar-section">
+            <div id="calendar"></div>
         </div>
+
+        <div class="resources-section">
+            <h2 class="section-title"> GC学生会出品</h2>
+            <div class="legend-container">
+                <h3 class="legend-title"> 活动分类图例</h3>
+
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e74c3c;"></div>
+                    <div class="legend-text">常规活动 / 日常例会 (红色)</div>
+                </div>
+
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #3498db;"></div>
+                    <div class="legend-text">大型活动 / 答辩 (蓝色)</div>
+                </div>
+
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f1c40f;"></div>
+                    <div class="legend-text">全员大会 (黄色)</div>
+                </div>
+
+            </div>
+            <div class="icon-grid">
+
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon">指北</div>
+                    <div class="icon-desc">点击查看 ▼</div>
+
+                    <div class="dropdown-menu">
+                        <a href="https://survive.gcers.org/" target="_blank">GC生存手册</a>
+                        <a href="#" target="_blank">各部门历年活动</a>
+                    </div>
+                </div>
+
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon">生活区</div>
+                    <div class="icon-desc">点击查看 ▼</div>
+
+                    <div class="dropdown-menu">
+                        <a href="#" target="_blank">宿舍钥匙及电脑维修</a>
+                        <a href="#" target="_blank">打印店及好吃的饭店</a>
+                    </div>
+                </div>
+
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon">生涯规划</div>
+                    <div class="icon-desc">点击查看 ▼</div>
+
+                    <div class="dropdown-menu">
+                        <a href="#" target="_blank">选课指南</a>
+                        <a href="#" target="_blank">学长学姐经验分享记录</a>
+                    </div>
+                </div>
+
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon"
+                        style="background-color: #5cb85c; box-shadow: 0 4px 10px rgba(92,184,92,0.3);">技术</div>
+                    <div class="icon-desc">点击查看 ▼</div>
+
+                    <div class="dropdown-menu">
+                        <a href="#" target="_blank">技术部 repo</a>
+                        <a href="#" target="_blank">科协相关文档</a>
+                    </div>
+                </div>
+
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon" style="background-color: #999; box-shadow: none;">更多</div>
+                    <div class="icon-desc">筹备中...</div>
+                    <div class="dropdown-menu">
+                        <a href="#">敬请期待</a>
+                    </div>
+                </div>
+
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon" style="background-color: #999; box-shadow: none;">更多</div>
+                    <div class="icon-desc">筹备中...</div>
+                    <div class="dropdown-menu">
+                        <a href="#">敬请期待</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
-</div>
+    <script>
+        // ===== 新增：控制下拉菜单点击显示的 JavaScript =====
+        function toggleMenu(element, event) {
+            // 阻止点击事件传递给 document，防止菜单刚打开就被关掉
+            event.stopPropagation();
 
-<script>
-    // ===== 新增：控制下拉菜单点击显示的 JavaScript =====
-    function toggleMenu(element, event) {
-        // 阻止点击事件传递给 document，防止菜单刚打开就被关掉
-        event.stopPropagation(); 
-        
-        // 检查当前点的这个菜单是不是已经打开了
-        let isActive = element.classList.contains('active');
-        
-        // 先把所有菜单都关掉（移除 active）
-        document.querySelectorAll('.icon-item').forEach(function(item) {
-            item.classList.remove('active');
-        });
-        
-        // 如果刚才它是关着的，就把它打开（加上 active）
-        if (!isActive) {
-            element.classList.add('active');
-        }
-    }
+            // 检查当前点的这个菜单是不是已经打开了
+            let isActive = element.classList.contains('active');
 
-    // 当用户点击网页空白处时，自动关掉所有菜单
-    document.addEventListener('click', function() {
-        document.querySelectorAll('.icon-item').forEach(function(item) {
-            item.classList.remove('active');
-        });
-    });
+            // 先把所有菜单都关掉（移除 active）
+            document.querySelectorAll('.icon-item').forEach(function (item) {
+                item.classList.remove('active');
+            });
 
-    // 意思是：等网页上的所有东西（骨架）都加载完毕后，再开始执行画日历的操作
-    document.addEventListener('DOMContentLoaded', function() {
-        
-        // 找到我们在 HTML 里留下的那个叫 calendar 的空 div
-        var calendarEl = document.getElementById('calendar');
-        
-        // 开始配置日历
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth', // 默认显示“月”视图
-            locale: 'zh-cn',             // 将日历的语言设置为中文
-            
-            // 顶端工具栏的按钮布局
-            headerToolbar: {
-                left: 'prev,next today', // 左边：上一月、下一月、返回今天
-                center: 'title',         // 中间：显示当前的年份和月份
-                right: 'dayGridMonth,timeGridWeek,listMonth' // 右边：视图切换按钮
-            },
-            
-            // 把默认的英文按钮文字翻译成中文
-            buttonText: {
-                today: '今天', month: '月视图', week: '周视图', list: '日程表'
-            },
-            
-            initialDate: '2026-06-01', // 强制日历打开时停留在 2026年6月（如果是当月使用，可删除这行）
-            
-            // 【核心数据】所有的活动都在这个数组里！以后只需复制粘贴大括号里面的内容即可添加新活动
-            events: [
-                { title: '学代会', start: '2026-07-08', backgroundColor: '#e74c3c', borderColor: '#e74c3c' },
-                { title: '女生节', start: '2026-06-6', backgroundColor: '#e74c3c', borderColor: '#e74c3c' },
-                { title: '毕业晚会', start: '2026-07-25', backgroundColor: '#3498db', borderColor: '#3498db' },
-                // 可以单独改变某个活动块的文字颜色（textColor）防止背景太亮看不清文字
-                { title: '服务月昭途分享会第二场', start: '2026-06-27', backgroundColor: '#f1c40f', borderColor: '#f1c40f', textColor: '#333' },
-                { title: '服务月六一', start: '2026-06-6', backgroundColor: '#e74c3c', borderColor: '#e74c3c' }
-            ],
-            
-            // 当用户在网页上点击某一个活动块时，弹出一个系统提示框
-            eventClick: function(info) {
-                alert("活动名称：" + info.event.title);
+            // 如果刚才它是关着的，就把它打开（加上 active）
+            if (!isActive) {
+                element.classList.add('active');
             }
+        }
+
+        // 当用户点击网页空白处时，自动关掉所有菜单
+        document.addEventListener('click', function () {
+            document.querySelectorAll('.icon-item').forEach(function (item) {
+                item.classList.remove('active');
+            });
         });
-        
-        // 把配置好的日历，真正渲染（画）到网页上
-        calendar.render();
-    });
-</script>
+
+        // 意思是：等网页上的所有东西（骨架）都加载完毕后，再开始执行画日历的操作
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // 找到我们在 HTML 里留下的那个叫 calendar 的空 div
+            var calendarEl = document.getElementById('calendar');
+
+            // 开始配置日历
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth', // 默认显示“月”视图
+                locale: 'zh-cn',             // 将日历的语言设置为中文
+
+                // 顶端工具栏的按钮布局
+                headerToolbar: {
+                    left: 'prev,next today', // 左边：上一月、下一月、返回今天
+                    center: 'title',         // 中间：显示当前的年份和月份
+                    right: 'dayGridMonth,timeGridWeek,listMonth' // 右边：视图切换按钮
+                },
+
+                // 把默认的英文按钮文字翻译成中文
+                buttonText: {
+                    today: '今天', month: '月视图', week: '周视图', list: '日程表'
+                },
+
+                initialDate: '2026-06-01', // 强制日历打开时停留在 2026年6月（如果是当月使用，可删除这行）
+
+                // 【核心数据】所有的活动都在这个数组里！以后只需复制粘贴大括号里面的内容即可添加新活动
+                events: [
+                    { title: '学代会', start: '2026-07-08T18:00:00', end: '2026-07-08T21:00:00', backgroundColor: '#e74c3c', borderColor: '#e74c3c' },
+                    { title: '女生节', start: '2026-06-06T13:00:00', end: '2026-06-06T17:00:00', backgroundColor: '#e74c3c', borderColor: '#e74c3c' },
+                    { title: '毕业晚会', start: '2026-07-25', backgroundColor: '#3498db', borderColor: '#3498db' },
+                    // 可以单独改变某个活动块的文字颜色（textColor）防止背景太亮看不清文字
+                    { title: '服务月昭途分享会第二场', start: '2026-06-27T10:20:00', end: '2026-06-27T11:20:00', backgroundColor: '#f1c40f', borderColor: '#f1c40f', textColor: '#333' },
+                    { title: '服务月六一', start: '2026-06-06T17:00:00', end: '2026-06-06T19:30:00', backgroundColor: '#e74c3c', borderColor: '#e74c3c' }
+                ],
+
+                // 当用户在网页上点击某一个活动块时，弹出一个系统提示框
+                eventClick: function (info) {
+                    alert("活动名称：" + info.event.title);
+                }
+            });
+
+            // 把配置好的日历，真正渲染（画）到网页上
+            calendar.render();
+        });
+    </script>
 
 </body>
+
 </html>
