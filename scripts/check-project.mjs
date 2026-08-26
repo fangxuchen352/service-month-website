@@ -179,6 +179,17 @@ if (/TRANSLATION_API_(?:KEY|URL)|SUPABASE_SERVICE_ROLE_KEY/.test(configSource)) 
     fail('js/config.js: 后端密钥或翻译服务配置不能放在浏览器配置中。');
 }
 
+const calendarSource = await readFile(path.join(projectRoot, 'js/calendar.js'), 'utf8');
+if (!/initialDate\s*:\s*new Date\(\)/.test(calendarSource)) {
+    fail('js/calendar.js: 日历首次打开时必须定位到访问当天。');
+}
+
+const fallbackContentSource = await readFile(path.join(projectRoot, 'js/content-data.js'), 'utf8');
+if (!fallbackContentSource.includes("zh: '科协活动'")
+    || !fallbackContentSource.includes("en: 'Science and Technology Association Events'")) {
+    fail('js/content-data.js: 科协活动图例必须同时包含中英文名称。');
+}
+
 if (failures.length > 0) {
     console.error('公开网站检查失败：');
     for (const message of failures) {

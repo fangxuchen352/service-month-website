@@ -20,7 +20,7 @@ If a custom domain is added later, use its final HTTPS addresses instead through
 
 The static public page can be deployed before Supabase is connected; it will show the bundled bilingual fallback content. Editing and login remain disabled until all of these steps are complete:
 
-1. Create the Supabase project and apply migrations `001` through `005` in order.
+1. Create the Supabase project and apply migrations `001` through `006` in order.
 2. Configure the authentication hook and allowed redirect URL as described in `supabase/AUTH_SETUP.md`.
 3. Put only the project URL and browser-safe publishable key in `js/config.js`.
 4. Let the chosen initial administrator sign in once, then follow `supabase/INITIAL_ADMIN_SETUP.md`.

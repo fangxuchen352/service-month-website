@@ -7,6 +7,7 @@ The database work is split into ordered migrations:
 - `migrations/003_authorization_policies.sql` grants public reads, owner-scoped editor writes, administrator access, soft deletion, and audit logging.
 - `migrations/004_legacy_content_import.sql` prepares the existing activities, resource links, draft placeholders, and translation terms for a one-time administrator-owned import.
 - `migrations/005_recycle_bin_purge.sql` provides a server-only 30-day permanent-deletion task for the recycle bin.
+- `migrations/006_rename_science_association_category.sql` applies the updated bilingual Science and Technology Association legend label to both new and existing databases.
 
 It includes:
 

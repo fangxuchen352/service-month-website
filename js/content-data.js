@@ -4,7 +4,7 @@
 
     var categories = [
         { kind: 'event', key: 'student_union', name: { zh: '学生会活动', en: 'Student Union Events' }, color: '#e74c3c', sortOrder: 10 },
-        { kind: 'event', key: 'service_month', name: { zh: '服务月活动', en: 'Service Month Events' }, color: '#3498db', sortOrder: 20 },
+        { kind: 'event', key: 'service_month', name: { zh: '科协活动', en: 'Science and Technology Association Events' }, color: '#3498db', sortOrder: 20 },
         { kind: 'event', key: 'youth_volunteer', name: { zh: '青志队活动', en: 'Youth Volunteer Events' }, color: '#2ecc71', sortOrder: 30 },
         { kind: 'resource', key: 'guide', name: { zh: '指北', en: 'Guides' }, color: '#4f69a2', sortOrder: 10 },
         { kind: 'resource', key: 'campus_life', name: { zh: '生活区', en: 'Campus Life' }, color: '#4f69a2', sortOrder: 20 },

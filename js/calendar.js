@@ -121,17 +121,6 @@
         };
     }
 
-    function chooseInitialDate(events) {
-        var dates = events
-            .map(function (event) { return new Date(event.start); })
-            .filter(function (date) { return !Number.isNaN(date.getTime()); })
-            .sort(function (left, right) { return left - right; });
-
-        if (!dates.length) return new Date();
-        var now = new Date();
-        return dates.find(function (date) { return date >= now; }) || dates[dates.length - 1];
-    }
-
     function wireTooltipControls() {
         var closeButton = document.querySelector('[data-tooltip-close]');
         if (closeButton && closeButton.dataset.tooltipReady !== 'true') {
@@ -161,7 +150,7 @@
         currentCategories = categories;
         calendar = new FullCalendar.Calendar(calendarElement, {
             initialView: 'dayGridMonth',
-            initialDate: chooseInitialDate(events),
+            initialDate: new Date(),
             locale: language === 'zh' ? 'zh-cn' : 'en',
             height: '100%',
             headerToolbar: {

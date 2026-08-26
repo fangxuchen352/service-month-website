@@ -48,7 +48,7 @@ begin
     insert into public.categories (kind, key, name_zh, name_en, color, sort_order)
     values
         ('event', 'student_union', '学生会活动', 'Student Union Events', '#e74c3c', 10),
-        ('event', 'service_month', '服务月活动', 'Service Month Events', '#3498db', 20),
+        ('event', 'service_month', '科协活动', 'Science and Technology Association Events', '#3498db', 20),
         ('event', 'youth_volunteer', '青志队活动', 'Youth Volunteer Events', '#2ecc71', 30),
         ('resource', 'guide', '指北', 'Guides', '#4f69a2', 10),
         ('resource', 'campus_life', '生活区', 'Campus Life', '#4f69a2', 20),
