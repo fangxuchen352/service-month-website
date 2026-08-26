@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GC学生会活动安排</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            height: 100vh;
+            /* 严格等于浏览器窗口的 100% 高度 */
+            overflow: hidden;
+            /* 隐藏浏览器的全局滚动条 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ==========================================
+           1. 修改：大幅度做大、做宽页眉 (Header)
+           ========================================== */
+        .page-header {
+            background-color: #ffffff;
+            padding: 22px 50px;
+            /* 增大上下和左右内边距，更有呼吸感 */
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+            /* 稍微加深一点阴影 */
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #98acbb;
+            /* 底部蓝色装饰线加粗到 3px */
+            height: 90px;
+            /* 🔥 核心改动：高度从 55px 暴增到 90px，彻底告别拥挤！ */
+            box-sizing: border-box;
+        }
+
+        .header-title {
+            margin: 0;
+            font-size: 2.5em;
+            /* 🔥 调大：从 1.8em 增加到了 2.5em，极其醒目 */
+            color: #000000;
+            font-weight: bold;
+            margin-bottom: 2px;
+            /* 拉近主副标题的距离，显得更紧凑 */
+        }
+
+        .header-subtitle {
+            margin: 0;
+            color: #777;
+            font-size: 0.85em;
+            /* 🔥 调小：从 0.95em 缩小到了 0.85em，做安静的配角 */
+        }
+
+        /* 右上角的 GC学生会出品 */
+        .header-logo-text {
+            font-size: 1.1em;
+            /* 🔥 调小：从 1.4em 缩小到了 1.1em */
+            font-weight: bold;
+            color: #4f69a2;
+            margin: 0;
+            letter-spacing: 1px;
+
+            /* 🔥 核心魔法：让这个元素打破整体的居中规则，单独向下靠拢！ */
+            align-self: flex-end;
+            /* 距离底部的灰色分割线留出一点点呼吸空间（如果不想要这个缝隙，可以改成 0） */
+            margin-bottom: 5px;
+        }
+
+        /* ==========================================
+           2. 核心数学计算：重新同步剩余高度
+           ========================================== */
+        .main-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 0 20px 20px 20px;
+            display: flex;
+            gap: 30px;
+            width: 100%;
+            /* 🔥 重点数学题：100vh 减去新页眉高度(90px)和边距(20px+20px)，现在精准减去 130px */
+            height: calc(100vh - 130px);
+            min-height: 580px;
+            box-sizing: border-box;
+        }
+
+        .calendar-section {
+            flex: 5.5;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .resources-section {
+            flex: 4.5;
+            min-width: 450px;
+            background: #ffffff;
+            padding: 30px 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            box-sizing: border-box;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 圆圈与间距保持大尺寸 */
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            column-gap: 30px;
+            row-gap: 110px;
+            justify-items: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+            transition: transform 0.2s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .icon-item:hover {
+            transform: scale(1.08);
+        }
+
+        .circle-icon {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background-color: #4f69a2;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25em;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(79, 105, 162, 0.3);
+            margin-bottom: 12px;
+        }
+
+        .icon-desc {
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+            line-height: 1.4;
+            max-width: 110px;
+        }
+
+        .legend-container {
+            background-color: #f8f9fa;
+            padding: 20px 30px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            width: 90%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .legend-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            margin-top: 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            margin-right: 12px;
+        }
+
+        .legend-text {
+            font-size: 0.95em;
+            color: #444;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 105%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            min-width: 140px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            border-radius: 8px;
+            padding: 4px 0;
+            z-index: 100;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 12px;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.9em;
+            text-align: center;
+            transition: background 0.2s;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f4f6f9;
+        }
+
+        .icon-item.active .dropdown-menu {
+            display: block;
+        }
+
+        @media (max-width: 1000px) {
+            body {
+                height: auto;
+                overflow: auto;
+            }
+
+            .main-container {
+                height: auto;
+                flex-direction: column;
+            }
+
+            .calendar-section {
+                height: 600px;
+            }
+
+            .resources-section {
+                width: 100%;
+                min-width: auto;
+                gap: 40px;
+            }
+        }
+
+        /* 高级弹窗 */
+        .event-tooltip {
+            display: none;
+            position: absolute;
+            z-index: 9999;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            width: 260px;
+            border: 1px solid #ebeef5;
+        }
+
+        .event-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            margin-left: -10px;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: #ffffff transparent transparent transparent;
+        }
+
+        .tooltip-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 22px;
+            color: #909399;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .tooltip-close:hover {
+            color: #333;
+        }
+
+        #tooltip-title {
+            color: #0078d4;
+            font-size: 24px;
+            margin: 0 0 15px 0;
+            font-weight: normal;
+            border-bottom: 1px solid #ebeef5;
+            padding-bottom: 10px;
+        }
+
+        .tooltip-time {
+            font-size: 14px;
+            color: #606266;
+            margin-bottom: 10px;
+        }
+
+        .tooltip-desc {
+            font-size: 14px;
+            color: #303133;
+            line-height: 1.5;
+        }
+
+        .fc-event {
+            cursor: pointer !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="page-header">
+        <div>
+            <h1 class="header-title">GCinfo</h1>
+            <p class="header-subtitle">汇聚各学生组织最新鲜的活动资讯与指南</p>
+        </div>
+        <div class="header-logo-text">✨ GC学生会出品</div>
+    </header>
+
+    <div class="main-container">
+
+        <div class="calendar-section">
+            <div id="calendar"></div>
+        </div>
+
+        <div class="resources-section">
+
+            <div class="icon-grid">
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon">指北</div>
+                    <div class="icon-desc">点击查看 ▼</div>
+                    <div class="dropdown-menu">
+                        <a href="https://survive.gcers.org/" target="_blank">GC生存手册</a>
+                        <a href="#" target="_blank">各部门历年活动</a>
+                    </div>
+                </div>
+
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon">生活区</div>
+                    <div class="icon-desc">点击查看 ▼</div>
+                    <div class="dropdown-menu">
+                        <a href="#" target="_blank">宿舍钥匙维修</a>
+                        <a href="#" target="_blank">周边美食打印</a>
+                    </div>
+                </div>
+
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon">生涯规划</div>
+                    <div class="icon-desc">点击查看 ▼</div>
+                    <div class="dropdown-menu">
+                        <a href="https://gc.sjtu.edu.cn/cn/academics/courses/" target="_blank">选课指南</a>
+                        <a href="#" target="_blank">学长经验分享</a>
+                    </div>
+                </div>
+
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon"
+                        style="background-color: #5cb85c; box-shadow: 0 4px 12px rgba(92,184,92,0.3);">技术</div>
+                    <div class="icon-desc">点击查看 ▼</div>
+                    <div class="dropdown-menu">
+                        <a href="https://github.com/Tech-JI" target="_blank">技术部 repo</a>
+                        <a href="#" target="_blank">科协相关文档</a>
+                    </div>
+                </div>
+
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon">学生权益</div>
+                    <div class="icon-desc">点击查看 ▼</div>
+                    <div class="dropdown-menu">
+                        <a href="https://piazza.com/sjtu.org/other/src" target="_blank">Src</a>
+                    </div>
+                </div>
+
+                <div class="icon-item" onclick="toggleMenu(this, event)">
+                    <div class="circle-icon" style="background-color: #999; box-shadow: none;">更多</div>
+                    <div class="icon-desc">筹备中...</div>
+                    <div class="dropdown-menu"><a href="#">敬请期待</a></div>
+                </div>
+            </div>
+
+            <div class="legend-container">
+                <h3 class="legend-title">🎨 活动图例</h3>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e74c3c;"></div>
+                    <div class="legend-text">学生会活动</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #3498db;"></div>
+                    <div class="legend-text">服务月活动</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #2ecc71;"></div>
+                    <div class="legend-text">青志队活动</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="custom-tooltip" class="event-tooltip">
+        <span class="tooltip-close" onclick="closeTooltip()">×</span>
+        <h3 id="tooltip-title">活动标题</h3>
+        <div class="tooltip-time" id="tooltip-time">时间信息</div>
+        <div class="tooltip-desc" id="tooltip-desc">描述内容</div>
+    </div>
+
+    <script>
+        function toggleMenu(element, event) {
+            event.stopPropagation();
+            let isActive = element.classList.contains('active');
+            document.querySelectorAll('.icon-item').forEach(item => item.classList.remove('active'));
+            if (!isActive) element.classList.add('active');
+        }
+
+        document.addEventListener('click', function () {
+            document.querySelectorAll('.icon-item').forEach(item => item.classList.remove('active'));
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'zh-cn',
+
+                // ==========================================
+                // 4. 高度自适应魔法：日历自动填满它所在的卡片高度！
+                // ==========================================
+                height: '100%',
+
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,listMonth'
+                },
+                buttonText: { today: '今天', month: '月视图', week: '周视图', list: '日程表' },
+                eventDisplay: 'block',
+                displayEventTime: false,
+
+                events: [
+                    { title: '学代会', start: '2026-07-08T18:30:00', end: '2026-07-08T21:00:00', backgroundColor: '#ffffff', borderColor: '#e74c3c', textColor: '#e74c3c', description: '地点: 包玉刚图书馆五楼学术报告厅 <br>详情可见: <a href="https://mp.weixin.qq.com/s/yz5NbD_Z5HQFbu8PV3Htjw" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>'},
+                    { title: '院长见面会', start: '2026-07-08T14:00:00', end: '2026-07-08T16:00:00', backgroundColor: '#ffffff', borderColor: '#e74c3c', textColor: '#e74c3c', description: '地点: 龙宾楼300中集报告厅 <br>详情可见: <a href="https://mp.weixin.qq.com/s/rYD85VWJNEQA3XkkeMQOEA" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>'},
+                    { title: '女生节', start: '2026-06-06T13:00:00', end: '2026-06-06T17:00:00', backgroundColor: '#ffffff', borderColor: '#e74c3c', textColor: '#e74c3c', description: '地点: 龙宾楼一楼唐创 <br>详情可见: <a href="https://mp.weixin.qq.com/s/l80c-tro8d1LSC_ySNjFLg" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>' },
+                    { title: '毕业晚会', start: '2026-07-25', backgroundColor: '#ffffff', borderColor: '#e74c3c', textColor: '#e74c3c', description: '地点: 待定。' },
+                    // 可以单独改变某个活动块的文字颜色（textColor）防止背景太亮看不清文字
+                    { title: '服务月昭途分享会第二场', start: '2026-06-27T10:20:00', end: '2026-06-27T11:20:00', backgroundColor: '#ffffff', borderColor: '#3498db', textColor: '#3498db', description: '地点: 龙宾楼300中集报告厅。<br>详情可见: <a href="https://mp.weixin.qq.com/s/XIg87s2vVMarbvDbDEW4IQ" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>' },
+                    { title: '服务月六一', start: '2026-06-06T17:00:00', end: '2026-06-06T19:30:00', backgroundColor: '#ffffff', borderColor: '#3498db', textColor: '#3498db', description: '地点: 龙宾楼444教工之家&电院大草坪。<br>详情可见: <a href="https://mp.weixin.qq.com/s/5VfUlKgB7ij5sg5Q95iycw" target="_blank" style="color: #0078d4; text-decoration: underline;">推送</a>' }
+                ],
+                eventClick: function (info) {
+                    var tooltip = document.getElementById('custom-tooltip');
+                    document.getElementById('tooltip-title').innerText = info.event.title;
+                    var start = info.event.start;
+                    var month = start.getMonth() + 1;
+                    var day = start.getDate();
+                    var timeStr = "时间: " + month + "月" + day + "日";
+                    if (!info.event.allDay) {
+                        var hours = start.getHours().toString().padStart(2, '0');
+                        var mins = start.getMinutes().toString().padStart(2, '0');
+                        timeStr += " " + hours + ":" + mins;
+                    }
+                    document.getElementById('tooltip-time').innerText = timeStr;
+                    document.getElementById('tooltip-desc').innerHTML = info.event.extendedProps.description || "暂无更多详细信息";
+                    tooltip.style.display = 'block';
+                    var x = info.jsEvent.pageX;
+                    var y = info.jsEvent.pageY;
+                    tooltip.style.left = (x - tooltip.offsetWidth / 2) + 'px';
+                    tooltip.style.top = (y - tooltip.offsetHeight - 15) + 'px';
+                }
+            });
+            calendar.render();
+        });
+
+        function closeTooltip() { document.getElementById('custom-tooltip').style.display = 'none'; }
+        document.addEventListener('click', function (e) {
+            var tooltip = document.getElementById('custom-tooltip');
+            if (!tooltip.contains(e.target) && !e.target.closest('.fc-event')) {
+                tooltip.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

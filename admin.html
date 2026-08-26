@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCinfo 内容管理</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <header class="admin-header">
+        <a class="brand-link" href="index.html" aria-label="返回 GCinfo 首页">
+            <span class="brand-title">GCinfo</span>
+            <span class="brand-subtitle">内容管理 / Content Management</span>
+        </a>
+        <a class="back-link" href="index.html">返回公开页面 / Back</a>
+    </header>
+
+    <main id="auth-view" class="auth-layout">
+        <section class="auth-card" aria-labelledby="auth-title">
+            <div class="auth-intro">
+                <p class="eyebrow">GC STUDENT UNION</p>
+                <h1 id="auth-title">登录内容管理</h1>
+                <p>使用上海交通大学邮箱获取一次性登录链接。</p>
+                <p class="english-copy">Sign in with an SJTU email address to request or use editing access.</p>
+            </div>
+
+            <div id="setup-notice" class="notice notice--warning" hidden>
+                登录服务尚未连接。创建 Supabase 项目后，在配置文件中填写项目地址和公开密钥即可启用。
+            </div>
+
+            <form id="login-form" class="login-form" novalidate>
+                <label for="email">上海交大邮箱 / SJTU Email</label>
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    inputmode="email"
+                    placeholder="name@sjtu.edu.cn"
+                    required
+                >
+                <p class="field-help">支持 @sjtu.edu.cn 及其子域名邮箱。</p>
+                <button id="login-button" type="submit">发送登录链接 / Send link</button>
+            </form>
+
+            <div id="login-message" class="notice" role="status" aria-live="polite" hidden></div>
+
+            <section id="account-panel" class="account-panel" hidden aria-labelledby="account-title">
+                <p class="eyebrow">SIGNED IN</p>
+                <h2 id="account-title">账户状态 / Account status</h2>
+                <dl class="account-details">
+                    <div>
+                        <dt>邮箱 / Email</dt>
+                        <dd id="account-email">—</dd>
+                    </div>
+                    <div>
+                        <dt>权限 / Role</dt>
+                        <dd id="account-role">—</dd>
+                    </div>
+                </dl>
+                <p id="role-message" class="role-message"></p>
+                <button id="logout-button" class="button-secondary" type="button">退出登录 / Sign out</button>
+            </section>
+        </section>
+
+        <aside class="access-card" aria-label="权限说明">
+            <h2>权限说明</h2>
+            <ol>
+                <li>所有人都可以免登录浏览公开内容。</li>
+                <li>只有交大邮箱可以登录管理页面。</li>
+                <li>新用户需要管理员授权后才能编辑。</li>
+                <li>编辑者只能管理自己创建的内容。</li>
+            </ol>
+            <p class="english-copy">Public browsing remains open. Editing access is granted manually by an administrator.</p>
+        </aside>
+    </main>
+
+    <main id="management-workspace" class="management-workspace" hidden>
+        <section class="workspace-heading">
+            <div>
+                <p class="eyebrow">CONTENT WORKSPACE</p>
+                <h1>内容管理工作台</h1>
+                <p>活动与资源必须同时填写中文和英文后才能发布。</p>
+                <p class="english-copy">Both Chinese and English content are required before publishing.</p>
+            </div>
+            <div class="workspace-account">
+                <strong id="workspace-email">—</strong>
+                <span id="workspace-role" class="role-badge">—</span>
+                <button id="workspace-logout" class="button-secondary" type="button">退出 / Sign out</button>
+            </div>
+        </section>
+
+        <div id="workspace-message" class="notice workspace-notice" role="status" aria-live="polite" hidden></div>
+
+        <section class="workspace-card">
+            <div class="workspace-toolbar">
+                <nav class="workspace-tabs" aria-label="管理内容分类">
+                    <button class="workspace-tab is-active" type="button" data-workspace-view="events">活动 / Events</button>
+                    <button class="workspace-tab" type="button" data-workspace-view="resources">资源 / Resources</button>
+                    <button class="workspace-tab" type="button" data-workspace-view="trash">回收站 / Trash</button>
+                    <button class="workspace-tab" type="button" data-workspace-view="users" data-admin-only hidden>用户权限 / Access</button>
+                </nav>
+                <div class="workspace-actions">
+                    <button id="import-legacy-button" class="button-secondary" type="button" data-admin-only hidden>
+                        导入现有内容 / Import
+                    </button>
+                    <button id="new-resource-button" class="button-secondary" type="button">
+                        新建资源 / New resource
+                    </button>
+                    <button id="new-event-button" class="button-primary" type="button">
+                        新建活动 / New event
+                    </button>
+                </div>
+            </div>
+
+            <section class="workspace-view" data-view-panel="events" aria-labelledby="events-title">
+                <div class="view-heading">
+                    <div>
+                        <h2 id="events-title">活动 / Events</h2>
+                        <p id="events-scope-note">显示你创建的活动。</p>
+                    </div>
+                    <span id="events-count" class="content-count">0</span>
+                </div>
+                <div id="events-list" class="content-list"></div>
+            </section>
+
+            <section class="workspace-view" data-view-panel="resources" aria-labelledby="resources-title" hidden>
+                <div class="view-heading">
+                    <div>
+                        <h2 id="resources-title">资源 / Resources</h2>
+                        <p id="resources-scope-note">显示你创建的资源。</p>
+                    </div>
+                    <span id="resources-count" class="content-count">0</span>
+                </div>
+                <div id="resources-list" class="content-list"></div>
+            </section>
+
+            <section class="workspace-view" data-view-panel="trash" aria-labelledby="trash-title" hidden>
+                <div class="view-heading">
+                    <div>
+                        <h2 id="trash-title">回收站 / Trash</h2>
+                        <p>删除内容会在这里保留 30 天；只有管理员可以恢复。</p>
+                    </div>
+                    <span id="trash-count" class="content-count">0</span>
+                </div>
+                <div id="trash-list" class="content-list"></div>
+            </section>
+
+            <section class="workspace-view" data-view-panel="users" aria-labelledby="users-title" hidden>
+                <div class="view-heading">
+                    <div>
+                        <h2 id="users-title">用户权限 / User access</h2>
+                        <p>新用户默认为浏览者，由管理员手动授予编辑权限。</p>
+                    </div>
+                    <span id="users-count" class="content-count">0</span>
+                </div>
+                <div id="users-list" class="content-list"></div>
+            </section>
+        </section>
+    </main>
+
+    <dialog id="content-dialog" class="content-dialog" aria-labelledby="content-dialog-title">
+        <form id="content-form" class="content-form" novalidate>
+            <div class="dialog-heading">
+                <div>
+                    <p class="eyebrow">BILINGUAL CONTENT</p>
+                    <h2 id="content-dialog-title">新建内容</h2>
+                </div>
+                <button class="dialog-close" type="button" data-dialog-cancel aria-label="关闭表单">×</button>
+            </div>
+
+            <input id="content-id" name="content_id" type="hidden">
+            <input id="content-type" name="content_type" type="hidden">
+
+            <div class="form-grid form-grid--compact">
+                <label>
+                    分类 / Category
+                    <select id="content-category" name="category_id" required></select>
+                </label>
+                <label>
+                    状态 / Status
+                    <select id="content-status" name="status" required>
+                        <option value="published">直接发布 / Published</option>
+                        <option value="draft">草稿 / Draft</option>
+                        <option value="archived">归档 / Archived</option>
+                    </select>
+                </label>
+            </div>
+
+            <section id="event-fields" class="form-section">
+                <div class="form-grid">
+                    <label>
+                        活动标题（中文）
+                        <input id="event-title-zh" name="title_zh" type="text" maxlength="160" required>
+                    </label>
+                    <label>
+                        Event title (English)
+                        <input id="event-title-en" name="title_en" type="text" maxlength="160" required>
+                    </label>
+                    <label>
+                        地点（中文）
+                        <input id="event-location-zh" name="location_zh" type="text" maxlength="240" required>
+                    </label>
+                    <label>
+                        Location (English)
+                        <input id="event-location-en" name="location_en" type="text" maxlength="240" required>
+                    </label>
+                    <label>
+                        开始时间 / Start
+                        <input id="event-start" name="start_at" type="datetime-local" required>
+                    </label>
+                    <label>
+                        结束时间 / End
+                        <input id="event-end" name="end_at" type="datetime-local">
+                    </label>
+                </div>
+                <label class="checkbox-field">
+                    <input id="event-all-day" name="all_day" type="checkbox">
+                    全天活动 / All-day event
+                </label>
+                <div class="form-grid">
+                    <label>
+                        活动说明（中文）
+                        <textarea id="event-description-zh" name="description_zh" rows="5" required></textarea>
+                    </label>
+                    <label>
+                        Event description (English)
+                        <textarea id="event-description-en" name="description_en" rows="5" required></textarea>
+                    </label>
+                </div>
+                <label>
+                    详情链接 / Details URL（可选 / Optional）
+                    <input id="event-url" name="external_url" type="url" inputmode="url" placeholder="https://">
+                </label>
+            </section>
+
+            <section id="resource-fields" class="form-section" hidden>
+                <div class="form-grid">
+                    <label>
+                        资源名称（中文）
+                        <input id="resource-name-zh" name="name_zh" type="text" maxlength="160" required>
+                    </label>
+                    <label>
+                        Resource name (English)
+                        <input id="resource-name-en" name="name_en" type="text" maxlength="160" required>
+                    </label>
+                    <label>
+                        链接 / URL
+                        <input id="resource-url" name="url" type="url" inputmode="url" placeholder="https://">
+                    </label>
+                    <label>
+                        排序 / Sort order
+                        <input id="resource-sort-order" name="sort_order" type="number" value="0" step="1">
+                    </label>
+                </div>
+                <p class="field-help">正式发布或归档的资源必须填写 HTTP(S) 链接；草稿可以暂时留空。</p>
+            </section>
+
+            <section class="translation-panel" aria-labelledby="translation-title">
+                <div class="translation-heading">
+                    <div>
+                        <h3 id="translation-title">自动翻译 / Automatic translation</h3>
+                        <p>翻译结果只会填入表单，请检查专有名词和表达后再保存。</p>
+                        <p class="english-copy">Translations only fill the form. Review terminology and wording before saving.</p>
+                    </div>
+                    <div class="translation-actions">
+                        <button id="translate-zh-en" class="button-secondary" type="button">中文 → English</button>
+                        <button id="translate-en-zh" class="button-secondary" type="button">English → 中文</button>
+                    </div>
+                </div>
+                <p id="translation-status" class="translation-status" role="status" aria-live="polite">
+                    翻译供应商将在 Supabase 后端配置，密钥不会发送到浏览器。
+                </p>
+                <label id="translation-review" class="translation-review" hidden>
+                    <input id="translation-confirmed" type="checkbox">
+                    <span>
+                        我已人工检查并确认翻译结果。
+                        <small>I have reviewed and confirmed the translated content.</small>
+                    </span>
+                </label>
+            </section>
+            <div id="form-message" class="notice notice--error" role="alert" hidden></div>
+            <div class="dialog-actions">
+                <button class="button-secondary" type="button" data-dialog-cancel>取消 / Cancel</button>
+                <button id="content-save-button" class="button-primary" type="submit">保存 / Save</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin-data.js"></script>
+    <script src="js/translation-service.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+    <script src="js/admin-login.js"></script>
+</body>
+
+</html>
