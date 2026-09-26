@@ -1,6 +1,8 @@
 (function () {
     'use strict';
 
+    var PUBLIC_CONTENT_TIMEOUT_MS = 6000;
+
     function getLocalContent(error) {
         var local = window.GCINFO_LEGACY_CONTENT || {
             categories: [],
@@ -92,13 +94,29 @@
         };
     }
 
+    function withTimeout(promise, timeoutMs) {
+        return new Promise(function (resolve, reject) {
+            var timeoutId = window.setTimeout(function () {
+                reject(new Error('Supabase content request timed out.'));
+            }, timeoutMs);
+
+            promise.then(function (value) {
+                window.clearTimeout(timeoutId);
+                resolve(value);
+            }, function (error) {
+                window.clearTimeout(timeoutId);
+                reject(error);
+            });
+        });
+    }
+
     async function loadPublicContent() {
         var connection = window.GCInfoSupabase;
         var client = connection && connection.getClient();
         if (!client) return getLocalContent();
 
         try {
-            return await loadFromSupabase(client);
+            return await withTimeout(loadFromSupabase(client), PUBLIC_CONTENT_TIMEOUT_MS);
         } catch (error) {
             return getLocalContent(error);
         }

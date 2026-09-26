@@ -184,6 +184,12 @@ if (!/initialDate\s*:\s*new Date\(\)/.test(calendarSource)) {
     fail('js/calendar.js: 日历首次打开时必须定位到访问当天。');
 }
 
+const dataServiceSource = await readFile(path.join(projectRoot, 'js/data-service.js'), 'utf8');
+if (!/PUBLIC_CONTENT_TIMEOUT_MS\s*=\s*\d+/.test(dataServiceSource)
+    || !dataServiceSource.includes('withTimeout(loadFromSupabase(client), PUBLIC_CONTENT_TIMEOUT_MS)')) {
+    fail('js/data-service.js: Supabase 公开内容请求必须有超时回退保护。');
+}
+
 const fallbackContentSource = await readFile(path.join(projectRoot, 'js/content-data.js'), 'utf8');
 if (!fallbackContentSource.includes("zh: '科协活动'")
     || !fallbackContentSource.includes("en: 'Science and Technology Association Events'")) {

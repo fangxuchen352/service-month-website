@@ -40,7 +40,7 @@ DEPLOYMENT.md               Deployment and backend connection checklist
 _backup/                    Recoverable pre-refactor page copy
 ```
 
-`js/content-data.js` is a deliberate fallback, not the primary data source. Once valid project settings are entered in `js/config.js`, the public page queries Supabase first. Only published events whose deletion timestamp is empty are requested and displayed.
+`js/content-data.js` is a deliberate fallback, not the primary data source. Once valid project settings are entered in `js/config.js`, the public page queries Supabase first. Only published events whose deletion timestamp is empty are requested and displayed. If Supabase is unavailable or does not respond within six seconds, the public page automatically uses the bundled bilingual fallback so that the calendar never waits indefinitely.
 
 The selected public-page language is stored in the browser and can also be linked directly with `?lang=zh` or `?lang=en`. Until a Supabase project URL and publishable key are entered in `js/config.js`, the management page displays a safe setup notice and makes no network login request.
 
