@@ -4,8 +4,7 @@
     function getLocalContent(error) {
         var local = window.GCINFO_LEGACY_CONTENT || {
             categories: [],
-            events: [],
-            resources: []
+            events: []
         };
 
         return {
@@ -14,9 +13,6 @@
             categories: local.categories.slice(),
             events: local.events.filter(function (event) {
                 return event.status === 'published';
-            }),
-            resources: local.resources.filter(function (resource) {
-                return resource.status === 'published' && isSafeUrl(resource.url);
             })
         };
     }
@@ -61,25 +57,12 @@
         };
     }
 
-    function normalizeResource(row, categoryById) {
-        var category = categoryById[row.category_id];
-
-        return {
-            id: row.id,
-            categoryId: row.category_id,
-            categoryKey: category ? category.key : '',
-            name: { zh: row.name_zh, en: row.name_en },
-            url: row.url,
-            sortOrder: row.sort_order,
-            status: row.status
-        };
-    }
-
     async function loadFromSupabase(client) {
         var results = await Promise.all([
             client
                 .from('categories')
                 .select('id,kind,key,name_zh,name_en,color,sort_order,is_active')
+                .eq('kind', 'event')
                 .eq('is_active', true)
                 .order('sort_order', { ascending: true }),
             client
@@ -87,13 +70,7 @@
                 .select('id,category_id,title_zh,title_en,location_zh,location_en,description_zh,description_en,start_at,end_at,all_day,external_url,status,deleted_at')
                 .eq('status', 'published')
                 .is('deleted_at', null)
-                .order('start_at', { ascending: true }),
-            client
-                .from('resources')
-                .select('id,category_id,name_zh,name_en,url,sort_order,status,deleted_at')
-                .eq('status', 'published')
-                .is('deleted_at', null)
-                .order('sort_order', { ascending: true })
+                .order('start_at', { ascending: true })
         ]);
 
         var firstError = results.find(function (result) { return result.error; });
@@ -111,10 +88,7 @@
             categories: categories,
             events: results[1].data.map(function (row) {
                 return normalizeEvent(row, categoryById);
-            }),
-            resources: results[2].data
-                .filter(function (row) { return isSafeUrl(row.url); })
-                .map(function (row) { return normalizeResource(row, categoryById); })
+            })
         };
     }
 

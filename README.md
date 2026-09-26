@@ -4,7 +4,7 @@ GCinfo is a bilingual-ready student activity calendar and resource portal for th
 
 ## Current website
 
-The site can remain hosted on GitHub Pages while Supabase supplies authentication and dynamic content. The public page now loads published events, resource links, and categories from Supabase, and supports a complete Chinese/English switch. If Supabase has not been configured or is temporarily unavailable, the page safely falls back to the bundled bilingual legacy content.
+The site can remain hosted on GitHub Pages while Supabase supplies authentication and dynamic content. The public page loads published events and event categories from Supabase, presents them as an activity calendar and legend, and supports a complete Chinese/English switch. Resource links remain available in the management workspace but are not shown on the public homepage. If Supabase has not been configured or is temporarily unavailable, the page safely falls back to the bundled bilingual legacy content.
 
 ## Project structure
 
@@ -18,7 +18,6 @@ js/supabase-client.js       Shared browser-safe Supabase connection
 js/data-service.js          Public database queries and local fallback
 js/i18n.js                  Public-page language state and fixed translations
 js/calendar.js              Dynamic bilingual calendar and event details
-js/resources.js             Dynamic bilingual resource menus
 js/app.js                   Public-page loading and rendering coordinator
 js/config.js                Browser-safe Supabase configuration placeholder
 js/auth.js                  Authentication client and SJTU email validation
@@ -41,7 +40,7 @@ DEPLOYMENT.md               Deployment and backend connection checklist
 _backup/                    Recoverable pre-refactor page copy
 ```
 
-`js/content-data.js` is a deliberate fallback, not the primary data source. Once valid project settings are entered in `js/config.js`, the public page queries Supabase first. Only rows whose status is `published` and whose deletion timestamp is empty are requested and displayed.
+`js/content-data.js` is a deliberate fallback, not the primary data source. Once valid project settings are entered in `js/config.js`, the public page queries Supabase first. Only published events whose deletion timestamp is empty are requested and displayed.
 
 The selected public-page language is stored in the browser and can also be linked directly with `?lang=zh` or `?lang=en`. Until a Supabase project URL and publishable key are entered in `js/config.js`, the management page displays a safe setup notice and makes no network login request.
 

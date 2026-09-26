@@ -30,15 +30,12 @@
 
     function renderForLanguage(language) {
         if (!content) return;
-        window.GCInfoResources.render(content.categories, content.resources, language);
         renderLegend(content.categories, language);
         window.GCInfoCalendar.updateLanguage(language);
     }
 
     async function start() {
         var i18n = window.GCInfoI18n;
-        var resourceGrid = document.getElementById('resource-grid');
-        if (resourceGrid) resourceGrid.setAttribute('aria-busy', 'true');
 
         content = await window.GCInfoData.loadPublicContent();
         if (content.error) {
@@ -47,7 +44,6 @@
 
         document.body.dataset.contentSource = content.source;
         var language = i18n.getLanguage();
-        window.GCInfoResources.render(content.categories, content.resources, language);
         renderLegend(content.categories, language);
         window.GCInfoCalendar.init(content.events, content.categories, language);
 

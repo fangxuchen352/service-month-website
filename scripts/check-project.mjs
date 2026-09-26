@@ -190,6 +190,14 @@ if (!fallbackContentSource.includes("zh: '科协活动'")
     fail('js/content-data.js: 科协活动图例必须同时包含中英文名称。');
 }
 
+const publicPageSource = await readFile(path.join(projectRoot, 'index.html'), 'utf8');
+if (publicPageSource.includes('resource-grid') || publicPageSource.includes('js/resources.js')) {
+    fail('index.html: 公开首页不应再显示或加载资源入口。');
+}
+if (!publicPageSource.includes('id="calendar"') || !publicPageSource.includes('id="legend-items"')) {
+    fail('index.html: 公开首页必须保留活动日历和图例。');
+}
+
 if (failures.length > 0) {
     console.error('公开网站检查失败：');
     for (const message of failures) {
