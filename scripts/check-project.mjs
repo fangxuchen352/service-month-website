@@ -196,6 +196,20 @@ if (!fallbackContentSource.includes("zh: '科协活动'")
     fail('js/content-data.js: 科协活动图例必须同时包含中英文名称。');
 }
 
+const requiredEventCategories = [
+    ['心协', 'Psychology Association'],
+    ['密缘人', 'Miyuanren'],
+    ['学院活动', 'School Events'],
+    ['Advising Center', 'Advising Center'],
+    ['融媒体', 'Converged Media']
+];
+for (const [nameZh, nameEn] of requiredEventCategories) {
+    if (!fallbackContentSource.includes(`zh: '${nameZh}'`)
+        || !fallbackContentSource.includes(`en: '${nameEn}'`)) {
+        fail(`js/content-data.js: 活动图例 ${nameZh} 必须同时包含中英文名称。`);
+    }
+}
+
 const publicPageSource = await readFile(path.join(projectRoot, 'index.html'), 'utf8');
 if (publicPageSource.includes('resource-grid') || publicPageSource.includes('js/resources.js')) {
     fail('index.html: 公开首页不应再显示或加载资源入口。');
