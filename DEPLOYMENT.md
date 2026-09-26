@@ -11,8 +11,8 @@ The repository includes a GitHub Actions workflow that validates the public file
 
 For the current repository, the expected default addresses are:
 
-- Public page: `https://fangxuchen352.github.io/service-month-website/`
-- Management page: `https://fangxuchen352.github.io/service-month-website/admin.html`
+- Public page: `https://sjtugcinfo.github.io/`
+- Management page: `https://sjtugcinfo.github.io/admin.html`
 
 If a custom domain is added later, use its final HTTPS addresses instead throughout the Supabase settings.
 
