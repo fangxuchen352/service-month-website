@@ -263,7 +263,12 @@
             var isCurrentUser = profile.id === state.profile.id;
 
             card.className = 'user-card';
-            identity.appendChild(createTextElement('h3', '', profile.email));
+            identity.appendChild(createTextElement(
+                'h3',
+                'user-display-name',
+                profile.display_name || '未填写姓名 / Name not provided'
+            ));
+            identity.appendChild(createTextElement('p', 'user-email', profile.email));
             identity.appendChild(createTextElement(
                 'p',
                 '',
@@ -271,6 +276,25 @@
                     ? '当前账户；请由另一位管理员更改其权限。'
                     : '注册时间 / Joined: ' + formatDate(profile.created_at, false)
             ));
+            identity.appendChild(createTextElement(
+                'p',
+                'user-application-details',
+                '所属学生组织 / Organization: '
+                    + (profile.access_request_organization || '未填写 / Not provided')
+            ));
+            identity.appendChild(createTextElement(
+                'p',
+                'user-application-details',
+                '职务 / Position: '
+                    + (profile.access_request_position || '未填写 / Not provided')
+            ));
+            if (profile.access_requested_at) {
+                identity.appendChild(createTextElement(
+                    'p',
+                    '',
+                    '申请时间 / Requested: ' + formatDate(profile.access_requested_at, true)
+                ));
+            }
 
             roleForm.className = 'user-role-form';
             select.setAttribute('aria-label', profile.email + ' role');

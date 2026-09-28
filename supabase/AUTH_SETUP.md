@@ -10,12 +10,14 @@ The local login page and authentication migration are ready, but they remain int
 4. Run `migrations/004_legacy_content_import.sql` to prepare the one-time importer.
 5. Run `migrations/005_recycle_bin_purge.sql` and later schedule `public.purge_expired_content()` once per day from a trusted server-side scheduler.
 6. Run `migrations/006_rename_science_association_category.sql` to apply the current bilingual legend label.
-7. In Supabase Authentication settings, enable the **Before User Created** Postgres hook and select `public.hook_restrict_signup_by_email_domain`.
-8. Set the GitHub Pages site URL and add the final `admin.html` address to the allowed redirect URLs.
-9. Copy the project URL and browser-safe publishable key into `js/config.js`.
-10. Deploy the `translate` Edge Function and configure its provider secrets as described in `TRANSLATION_SETUP.md`.
-11. Request a login link from `admin.html` and verify that the new profile has the `viewer` role.
-12. After the chosen initial administrator signs in once, follow `INITIAL_ADMIN_SETUP.md` to grant the first administrator role safely.
+7. Run `migrations/007_add_event_organization_categories.sql` to add the current student-organization legend categories.
+8. Run `migrations/008_editor_access_requests.sql` to enable private editor-access applications.
+9. In Supabase Authentication settings, enable the **Before User Created** Postgres hook and select `public.hook_restrict_signup_by_email_domain`.
+10. Set the GitHub Pages site URL and add the final `admin.html` address to the allowed redirect URLs.
+11. Copy the project URL and browser-safe publishable key into `js/config.js`.
+12. Deploy the `translate` Edge Function and configure its provider secrets as described in `TRANSLATION_SETUP.md`.
+13. Request a login link from `admin.html` and verify that the new profile has the `viewer` role.
+14. After the chosen initial administrator signs in once, follow `INITIAL_ADMIN_SETUP.md` to grant the first administrator role safely.
 
 The domain rule accepts `@sjtu.edu.cn` and any subdomain such as `@mail.sjtu.edu.cn`. All other domains are rejected by the registration hook, and the profile-creation trigger repeats the check as a fallback.
 

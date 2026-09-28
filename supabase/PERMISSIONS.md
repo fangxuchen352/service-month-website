@@ -13,7 +13,9 @@ The policies in `migrations/003_authorization_policies.sql` enforce the followin
 | Permanently delete content | No | No | No | No browser access |
 | Read own profile role | No | Yes | Yes | Yes |
 | Read or change other user roles | No | No | No | Yes |
+| Submit own editor-access application | No | Yes | No | No |
 | Manage categories and glossary | No | No | No | Yes |
+| Read other users' access-application details | No | No | No | Yes |
 | Read audit history | No | No | No | Yes |
 | Request automatic translation | No | No | Yes | Yes |
 

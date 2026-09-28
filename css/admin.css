@@ -123,17 +123,28 @@ textarea {
     line-height: 1.65;
 }
 
-.login-form {
+.login-form,
+.access-request-form {
     margin-top: 30px;
     display: grid;
     gap: 10px;
 }
 
-.login-form label {
+.access-request-form {
+    margin-bottom: 22px;
+    padding: 20px;
+    border: 1px solid #dfe4ec;
+    border-radius: 12px;
+    background: #f8f9fc;
+}
+
+.login-form label,
+.access-request-form label {
     font-weight: 700;
 }
 
-.login-form input {
+.login-form input,
+.access-request-form input {
     width: 100%;
     border: 1px solid #cbd2dc;
     border-radius: 10px;
@@ -144,9 +155,22 @@ textarea {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.login-form input:focus {
+.login-form input:focus,
+.access-request-form input:focus {
     border-color: #4f69a2;
     box-shadow: 0 0 0 3px rgba(79, 105, 162, 0.14);
+}
+
+.access-request-heading h3 {
+    margin: 0 0 7px;
+    color: #1c2433;
+}
+
+.access-request-heading p {
+    margin: 0 0 8px;
+    color: #697383;
+    font-size: 0.88rem;
+    line-height: 1.55;
 }
 
 .field-help {
@@ -522,6 +546,30 @@ button:disabled {
     margin: 6px 0 0;
     color: #707989;
     font-size: 0.85rem;
+}
+
+.user-card .user-display-name {
+    margin-bottom: 4px;
+    font-size: 1.02rem;
+}
+
+.user-card .user-email {
+    margin-top: 0;
+    overflow-wrap: anywhere;
+}
+
+.user-card .user-application-details {
+    margin-top: 12px;
+    padding: 10px 12px;
+    color: #3d4859;
+    background: #f3f5f9;
+    border-radius: 9px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+}
+
+.user-card .user-application-details + .user-application-details {
+    margin-top: 6px;
 }
 
 .user-role-form {

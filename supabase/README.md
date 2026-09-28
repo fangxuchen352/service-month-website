@@ -9,6 +9,7 @@ The database work is split into ordered migrations:
 - `migrations/005_recycle_bin_purge.sql` provides a server-only 30-day permanent-deletion task for the recycle bin.
 - `migrations/006_rename_science_association_category.sql` applies the updated bilingual Science and Technology Association legend label to both new and existing databases.
 - `migrations/007_add_event_organization_categories.sql` adds the five requested bilingual event-organization categories and legend colors.
+- `migrations/008_editor_access_requests.sql` lets viewers privately submit their name, student organization, and position for administrator review without allowing self-promotion.
 
 It includes:
 

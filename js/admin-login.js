@@ -14,6 +14,11 @@
     var accountRole = document.getElementById('account-role');
     var roleMessage = document.getElementById('role-message');
     var logoutButton = document.getElementById('logout-button');
+    var accessRequestForm = document.getElementById('access-request-form');
+    var accessRequestName = document.getElementById('access-request-name');
+    var accessRequestOrganization = document.getElementById('access-request-organization');
+    var accessRequestPosition = document.getElementById('access-request-position');
+    var accessRequestButton = document.getElementById('access-request-button');
     var renderSequence = 0;
 
     var roleLabels = {
@@ -54,6 +59,7 @@
             authView.hidden = false;
             loginForm.hidden = false;
             accountPanel.hidden = true;
+            accessRequestForm.hidden = true;
             return;
         }
 
@@ -64,6 +70,10 @@
             accountEmail.textContent = profile.email || session.user.email;
             accountRole.textContent = roleLabels[profile.role] || profile.role;
             roleMessage.textContent = roleMessages[profile.role] || '当前账户状态未知，请联系管理员。';
+            accessRequestName.value = profile.display_name || '';
+            accessRequestOrganization.value = profile.access_request_organization || '';
+            accessRequestPosition.value = profile.access_request_position || '';
+            accessRequestForm.hidden = profile.role !== 'viewer';
             loginForm.hidden = true;
             hideMessage();
 
@@ -104,6 +114,43 @@
         }
     }
 
+    async function handleAccessRequestSubmit(event) {
+        event.preventDefault();
+        hideMessage();
+
+        var displayName = accessRequestName.value.trim();
+        var organization = accessRequestOrganization.value.trim();
+        var position = accessRequestPosition.value.trim();
+        if (!displayName) {
+            showMessage('请填写真实姓名。', 'error');
+            accessRequestName.focus();
+            return;
+        }
+        if (!organization || organization.length > 120) {
+            showMessage('请填写所属学生组织，且不要超过 120 个字符。', 'error');
+            accessRequestOrganization.focus();
+            return;
+        }
+        if (!position || position.length > 120) {
+            showMessage('请填写职务，且不要超过 120 个字符。', 'error');
+            accessRequestPosition.focus();
+            return;
+        }
+
+        accessRequestButton.disabled = true;
+        accessRequestButton.textContent = '正在提交… / Submitting…';
+        try {
+            await auth.submitAccessRequest(displayName, organization, position);
+            showMessage('申请信息已提交。管理员现在可以看到你的姓名、所属学生组织和职务。');
+            roleMessage.textContent = '申请已提交，请等待管理员审核。你可以在获得权限前更新申请信息。';
+        } catch (error) {
+            showMessage(error.message || '申请提交失败，请稍后重试。', 'error');
+        } finally {
+            accessRequestButton.disabled = false;
+            accessRequestButton.textContent = '提交或更新申请 / Submit or update';
+        }
+    }
+
     async function handleSignOut() {
         logoutButton.disabled = true;
         try {
@@ -126,6 +173,7 @@
         }
 
         loginForm.addEventListener('submit', handleSubmit);
+        accessRequestForm.addEventListener('submit', handleAccessRequestSubmit);
         logoutButton.addEventListener('click', handleSignOut);
 
         auth.onAuthStateChange(function (_event, session) {

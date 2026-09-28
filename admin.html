@@ -61,6 +61,42 @@
                     </div>
                 </dl>
                 <p id="role-message" class="role-message"></p>
+                <form id="access-request-form" class="access-request-form" hidden>
+                    <div class="access-request-heading">
+                        <h3>申请编辑权限 / Request editing access</h3>
+                        <p>请填写真实姓名、所属学生组织和职务，管理员将根据这些信息审核。</p>
+                    </div>
+                    <label for="access-request-name">姓名 / Name</label>
+                    <input
+                        id="access-request-name"
+                        name="display_name"
+                        type="text"
+                        autocomplete="name"
+                        maxlength="80"
+                        placeholder="例如：张三"
+                        required
+                    >
+                    <label for="access-request-organization">所属学生组织 / Student organization</label>
+                    <input
+                        id="access-request-organization"
+                        name="access_request_organization"
+                        type="text"
+                        maxlength="120"
+                        placeholder="例如：学生会"
+                        required
+                    >
+                    <label for="access-request-position">职务 / Position</label>
+                    <input
+                        id="access-request-position"
+                        name="access_request_position"
+                        type="text"
+                        maxlength="120"
+                        placeholder="例如：宣传部干事"
+                        required
+                    >
+                    <p class="field-help">除你本人外，这些信息只有管理员可以查看；可在获得权限前修改。</p>
+                    <button id="access-request-button" class="button-primary" type="submit">提交申请 / Submit request</button>
+                </form>
                 <button id="logout-button" class="button-secondary" type="button">退出登录 / Sign out</button>
             </section>
         </section>
@@ -152,7 +188,7 @@
                 <div class="view-heading">
                     <div>
                         <h2 id="users-title">用户权限 / User access</h2>
-                        <p>新用户默认为浏览者，由管理员手动授予编辑权限。</p>
+                        <p>查看申请人的姓名、所属学生组织和职务后，再决定是否授予编辑权限。</p>
                     </div>
                     <span id="users-count" class="content-count">0</span>
                 </div>

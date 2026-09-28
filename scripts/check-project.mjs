@@ -218,6 +218,23 @@ if (!publicPageSource.includes('id="calendar"') || !publicPageSource.includes('i
     fail('index.html: 公开首页必须保留活动日历和图例。');
 }
 
+const adminPageSource = await readFile(path.join(projectRoot, 'admin.html'), 'utf8');
+for (const requiredId of ['access-request-form', 'access-request-name', 'access-request-organization', 'access-request-position']) {
+    if (!adminPageSource.includes(`id="${requiredId}"`)) {
+        fail(`admin.html: 缺少权限申请字段 ${requiredId}。`);
+    }
+}
+
+const accessRequestMigration = await readFile(
+    path.join(projectRoot, 'supabase/migrations/008_editor_access_requests.sql'),
+    'utf8'
+);
+if (!accessRequestMigration.includes('security definer')
+    || !accessRequestMigration.includes('submit_editor_access_request')
+    || !accessRequestMigration.includes("role = 'viewer'::public.user_role")) {
+    fail('008_editor_access_requests.sql: 权限申请函数必须限制为已登录的 viewer，且不能开放角色修改。');
+}
+
 if (failures.length > 0) {
     console.error('公开网站检查失败：');
     for (const message of failures) {

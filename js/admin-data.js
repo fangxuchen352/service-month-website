@@ -5,6 +5,7 @@
     var EVENT_FIELDS = 'id,category_id,title_zh,title_en,location_zh,location_en,description_zh,description_en,start_at,end_at,all_day,external_url,status,created_by,deleted_at,deleted_by,created_at,updated_at';
     var RESOURCE_FIELDS = 'id,category_id,name_zh,name_en,url,sort_order,status,created_by,deleted_at,deleted_by,created_at,updated_at';
     var PROFILE_FIELDS = 'id,email,display_name,role,approved_at,created_at';
+    var PROFILE_REVIEW_FIELDS = PROFILE_FIELDS + ',access_request_organization,access_request_position,access_requested_at';
 
     function requireClient() {
         var connection = window.GCInfoSupabase;
@@ -45,10 +46,19 @@
 
     async function loadProfiles(client, profile) {
         if (profile.role !== 'admin') return [];
-        return unwrap(await client
+        var result = await client
             .from('profiles')
-            .select(PROFILE_FIELDS)
-            .order('created_at', { ascending: false }));
+            .select(PROFILE_REVIEW_FIELDS)
+            .order('created_at', { ascending: false });
+
+        if (result.error && /access_request_/i.test(result.error.message || '')) {
+            result = await client
+                .from('profiles')
+                .select(PROFILE_FIELDS)
+                .order('created_at', { ascending: false });
+        }
+
+        return unwrap(result);
     }
 
     async function loadWorkspace(profile) {
